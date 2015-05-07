@@ -1,0 +1,13 @@
+--bugs:
+
+http://sloppymcnubble.com/cbid/index.php?searchtxt=&txttype=lots&item=1876+Reserve+Torpedo+%2825%29&type=&issearch=true
+
+Which brings me to a minor quibble. The info that shows up when you hover on the graph goes off-screen on the right side in Chrome. If I re-size my browser window the info-pop-up no longer works. If I go back to my original size the info-pop-up come back. If I re-size and re-do my search, the graph just gets wider and, therefore, the info-pop-up goes off-screen. If you're using a percentage of the browser width to size the graph, can we cut that down a few percent to be able to see the info-pop-up? 
+
+List item history, then search by text. Item history list still shows previous search.
+
+--Feature requests:
+Is it possible to have the table headings scroll with the page so that you can always see them?
+Add CI Price to items
+
+

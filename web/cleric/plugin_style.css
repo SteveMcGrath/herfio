@@ -1,0 +1,37 @@
+html, body, h1, form, fieldset, legend, ol, li {
+	margin: 0;
+	padding: 2;
+	}
+
+body {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	}
+
+h1 {
+	color: #666666;
+}
+
+h2 {
+	color: #666666;
+}
+
+h3, h4 {
+	color: #666666;
+}
+
+h5, h6 {
+	color: #6699CC;
+}
+
+a {
+	color: #9999cc;
+}
+
+.price > td {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	padding: 10px 20px 10px 20px;
+	}
+	
+.hidden {
+	display: none;
+}
