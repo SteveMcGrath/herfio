@@ -1,0 +1,9 @@
+Flask
+Flask-Script
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Bootstrap
+Flask-WTF
+WTForms-Alchemy
+requests
+BeautifulSoup
