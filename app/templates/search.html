@@ -85,10 +85,17 @@
 			<tbody>
 				{% for item in results %}{% if item.price %}
 				<tr>
-					<td>{{ item.name}}</td>
+					<td>
+						{{ item.name}}
+						<span class="pull-right">
+							<a class="btn btn-info btn-xs" href="{{ item.link }}">
+								<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+							</a>
+						</span>
+					</td>
 					<td>{{ item.type }}</td>
 					<td><span class="label label-{% if item.finished %}info{% else %}danger{% endif %}">{% if item.finished %}CLOSED{% else %}OPEN{% endif %}</span></td>
-					<td><a class="btn btn-info btn-xs" href="{{ item.link }}">{{ item.site }}</a></td>
+					<td>{{ item.site }}</td>
 					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
 						<span class="text-muted">
 							<small>
