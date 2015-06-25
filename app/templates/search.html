@@ -6,6 +6,10 @@
 {% block head %}
 {{ super() }}
 {{ fixes.ie8() }}
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.flot.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.flot.time.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/bidhistory.js') }}"></script>
 {% endblock head %}
 
 {% block styles %}
@@ -77,13 +81,40 @@
 			<li class="list-group-item">Average Price Per Stick<span class="badge">{{ '%3.2f' % stats['avg'] }}</span></li>
 		</ul>
 	</div>
+	<div class="container" id="trends">
+	<div class="container" id="trend-placeholder"
+	</div>
+	<button class="btn btn-primary" onclick="toggle_visibility('current-auctions');">Toggler Open Auctions</button>
+	<div class="container" id="current-auctions">
+		<table class="table table-striped">
+			<thead>
+				<td>Title</td><td>Category</td><td>Site</td>
+			</thead>
+			<tbody>
+				{% for item in open_auctions %}{% if item.price %}
+				<tr>
+					<td>
+						{{ item.name}}
+						<span class="pull-right">
+							<a class="btn btn-info btn-xs" href="{{ item.link }}">
+								<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
+							</a>
+						</span>
+					</td>
+					<td>{{ item.type }}</td>
+					<td>{{ item.site }}</td>
+				</tr>
+				{% endif %}{% endfor %}
+			</tbody>
+		</table>
+	</div>
 	<div class="container" id="history">
 		<table class="table table-striped">
 			<thead>
 				<td>Title</td><td>Category</td><td>Closed</td><td>Site</td><td>QTY</td><td>Price</td>
 			</thead>
 			<tbody>
-				{% for item in results %}{% if item.price %}
+				{% for item in closed_auctions %}{% if item.price %}
 				<tr>
 					<td>
 						{{ item.name}}
@@ -114,5 +145,13 @@
 		</table>
 	</div>
 </div>
+<script type="text/javascript">
+	$(function() {
+		var d = {{ stats['trend'] }}
+		$.plot("#trend-placeholder", [d], {
+			xaxis: { mode: "time" }
+		});
+	})
+</script>
 {% endif %}
 {% endblock %}

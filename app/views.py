@@ -3,6 +3,7 @@ from .extensions import db
 from .models import Auction
 from .forms import SearchForm
 from urllib2 import unquote
+from numpy import median, std, floor, average
 
 
 app = Flask(__name__)
@@ -24,16 +25,31 @@ def search(search_string=None):
         if search_string == '':
             search_string = '[EMPTY]'
         else:
-            q = Auction.query.order_by(Auction.name)
+            o = Auction.query.order_by(Auction.name).filter_by(finished=False)
+            c = Auction.query.order_by(Auction.close).filter_by(finished=True)
             for word in search_string.split():
-                q = q.filter(Auction.name.like('%%%s%%' % word))
-            results = q.all()
-        if results:
-            stats['high'] = max([i.price_per_stick for i in results if i.price_per_stick is not None])
-            stats['low'] = min([i.price_per_stick for i in results if i.price_per_stick is not None])
-            stats['avg'] = sum([i.price_per_stick for i in results if i.price_per_stick is not None])/len(results)
+                o = o.filter(Auction.name.like('%%%s%%' % word))
+                c = c.filter(Auction.name.like('%%%s%%' % word))
+            closed_auctions = c.all()
+            open_auctions = o.all()
+
+        if closed_auctions:
+            prices = sorted([i.price_per_stick for i in closed_auctions if i.price_per_stick is not None])
+            if len(prices) > 0:
+                stats['avg_price'] = average(prices)
+                stats['median_price'] = median(prices)
+                stats['std_deviation'] = std(prices)
+                stats['worst_price'] = min(prices)
+                stats['bad_price'] = prices[floor(len(prices)*5/6)]
+                stats['poor_price'] = prices[floor(len(prices)*4/6)]
+                stats['good_price'] = prices[floor(len(prices)*2/6)]
+                stats['great_price'] = prices[floor(len(prices)*1/6)]
+                stats['best_price'] = max(prices)
+            stats['trend'] = [[mktime(i.close.timetuple()), i.price_per_stick] for i in closed_auctions if i.price_per_stick is not None]            
+
     return render_template('search.html',
-        results=results, 
+        open_auctions=open_auctions,
+        closed_auctions=cloased_auctions, 
         form=form,
         stats=stats,
         search_string=search_string,
