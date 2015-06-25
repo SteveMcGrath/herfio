@@ -6,7 +6,7 @@ Requires=mariadb.service
 [Service]
 Type=forking
 Environment=PYTHONPATH=/opt/bidhistory/
-WorkingDirectory=/opt/bidhistory/site
+WorkingDirectory=/opt/bidhistory/
 ExecStart=/usr/bin/paster serve \
           --pid-file=/var/run/bidhistory.pid \
           --log-file=/var/log/bidhistory.log \
