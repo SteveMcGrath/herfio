@@ -80,7 +80,7 @@
 	<div class="container" id="history">
 		<table class="table table-striped">
 			<thead>
-				<td>Title</td><td>Category</td><td>Status</td><td>Site</td><td>Price</td>
+				<td>Title</td><td>Category</td><td>Close</td><td>Site</td><td>Price</td>
 			</thead>
 			<tbody>
 				{% for item in results %}{% if item.price %}
@@ -94,7 +94,12 @@
 						</span>
 					</td>
 					<td>{{ item.type }}</td>
-					<td><span class="label label-{% if item.finished %}info{% else %}danger{% endif %}">{% if item.finished %}CLOSED{% else %}OPEN{% endif %}</span></td>
+					<td>{% if item.finished %}
+							{{ item.close.strftime('%Y-%m-%d') }}
+						{% else %}
+							<span class="label label-danger">OPEN</span>
+						{% endif %}
+					</td>
 					<td>{{ item.site }}</td>
 					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
 						<span class="text-muted">
