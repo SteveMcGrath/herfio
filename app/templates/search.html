@@ -51,7 +51,7 @@
 {% if not results %}
 <div class="container">
 	<div class="jumbotron">
-		<h1>Search Away</h1>
+		<h4>Search</h4>
     	<form method="POST">
     		{{ form.hidden_tag() }}
 	        <div class="form-group">
@@ -61,6 +61,9 @@
 		        </span>
 	        </div>
 	    </form>
+	    {% if search_string %}
+	    <p>no results for <strong>{{ search_string }}</strong> found.</p>
+	    {% endif %}
 	</div>
 </div>
 {% else %}

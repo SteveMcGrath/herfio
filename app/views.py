@@ -18,9 +18,10 @@ def search():
         for word in form.search.data.split():
             q = q.filter(Auction.name.like('%%%s%%' % word))
         results = q.all()
-        stats['high'] = max([i.price_per_stick for i in results if i.price_per_stick is not None])
-        stats['low'] = min([i.price_per_stick for i in results if i.price_per_stick is not None])
-        stats['avg'] = sum([i.price_per_stick for i in results if i.price_per_stick is not None])/len(results)
+        if results:
+            stats['high'] = max([i.price_per_stick for i in results if i.price_per_stick is not None])
+            stats['low'] = min([i.price_per_stick for i in results if i.price_per_stick is not None])
+            stats['avg'] = sum([i.price_per_stick for i in results if i.price_per_stick is not None])/len(results)
     return render_template('search.html',
         results=results, 
         form=form,
