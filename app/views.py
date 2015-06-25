@@ -14,10 +14,13 @@ def search():
     results = None
     stats = {}
     if form.validate_on_submit():
-        q = Auction.query.order_by(Auction.name)
-        for word in form.search.data.split():
-            q = q.filter(Auction.name.like('%%%s%%' % word))
-        results = q.all()
+        if form.search.data == '':
+            form.search.data = '[EMPTY]'
+        else:
+            q = Auction.query.order_by(Auction.name)
+            for word in form.search.data.split():
+                q = q.filter(Auction.name.like('%%%s%%' % word))
+            results = q.all()
         if results:
             stats['high'] = max([i.price_per_stick for i in results if i.price_per_stick is not None])
             stats['low'] = min([i.price_per_stick for i in results if i.price_per_stick is not None])
