@@ -2,3 +2,4 @@
 database.db
 bidparser.log
 migrations/*
+config.py
