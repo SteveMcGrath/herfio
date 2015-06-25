@@ -25,3 +25,10 @@ class Auction(db.Model):
     finished = db.Column(db.Boolean, default=False)
     _brand_id = db.Column(db.Integer, db.ForeignKey('brands.id'))
     brand = db.relationship('Brand', backref='auctions')
+
+    @hybrid_property
+    def price_per_stick(self):
+        if self.price and self.quantity:
+            return self.price / self.quantity
+        else:
+            return None
