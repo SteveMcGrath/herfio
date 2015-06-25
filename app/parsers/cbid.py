@@ -2,6 +2,7 @@ from BeautifulSoup import BeautifulSoup
 from datetime import datetime, timedelta
 from app.models import Auction, Brand
 from app.extensions import db
+from . import logging
 import requests, re
 
 
@@ -31,12 +32,19 @@ class Parser(object):
         this may become relevent in some searches.
         '''
         regexes = [
-            re.compile(r'\w+ of (\d{1,3})'),
-            re.compile(r'^(\d{1,3})[ -]'),
+            re.compile(r'\w+ of (\d{1,3})'),    # Catches "Box of 20"
+            re.compile(r'(\d{1,3})[ -]Cigar'),  # Catches "20 Cigars"
+            re.compile(r'^(\d{1,3})[ -]'),      # Catches "5-" (for 5-Packs)
+        ]
+        keywords = [
+            'toro', 'robusto', 'belicoso', 'connecticut', 'maduro', 'churchill',
+            'torpedo', 'corona', 'single', 'lonsdale', 'corojo', 'sumatra',
+            'magnum', 'maestro', 'brillantes', 'series \'a\'', 'imperial',
+            'box-press', 'gigante', 'shorty', 
         ]
         aid = item.findChild('td', {'class': 'cb_wcb cb_colsm'}).findNext('span').get('data-id')
         auction = Auction.query.filter_by(aid=aid, site='cbid').first()
-        
+
         if not auction:
             # as we haven't seen this action before, we will need to get all of
             # the usual information and store that into a new Auction database
@@ -47,16 +55,55 @@ class Parser(object):
             auction = Auction()
 
             try:
+                # Not all Boxes are in the boxes part of the auction.  We will
+                # will instead leverage the commonality of the title formatting
+                # to pull all of these.
                 auction.name, auction.quantity = re.findall(r'^([\W\w]+) \((\d{1,3})\)', title)[0]
                 auction.type = 'box'
             except IndexError:
-                data = title.split(' - ')
-                auction.name = data[0]
-                for regex in regexes:
+                auction.name = title
+                if category == 'Boxes':
+                    auction.name, auction.quantity = re.findall(r'^([\W\w]+) \((\d{1,3})\)', title)[0]
+                    auction.type = 'box'
+                elif category == '5-Packs':
+                    # The next way we can handle this is to look for all of the
+                    # 5-Packs in the response and set the quantity to 5.
+                    auction.quantity = 5
+                    auction.type = '5_packs'
+                elif category == 'Singles':
+                    # Singles should always be a quantity of 1.
+                    auction.quantity = 1
+                    auction.type = 'singles'
+                elif category in ['Specials', 'Samplers', 'Quick-ies']:
+                    # These 3 categories are some genetal catch-all categories
+                    # and we need to handle the information in a more generic
+                    # way.
+                    data = title.split(' - ')
+                    if len(data) > 1:
+                        for regex in regexes:
+                            # Our first of the dirty hacks is to try to match
+                            # the title up to some of the common formats.  This
+                            # generally seems to work as expected.
+                            if not auction.quantity:
+                                i = regex.findall(data[-1])
+                                if len(i) > 0:
+                                    auction.quantity = int(i[0])
                     if not auction.quantity:
-                        i = regex.findall(data[0])
-                        if len(i) > 0:
-                            auction.quantity = int(i[0])
+                        for keyword in keywords:
+                            # If all else has failed, we have a list of keywords
+                            # that would let us know of the title is referring to
+                            # cigars or some other merch.  If any of these match,
+                            # then we will consider it a single.
+                            if keyword in title.lower():
+                                auction.quantity = 1
+                if not auction.quantity:
+                    # Well none of the above options matched, so this doesn't
+                    # appear to be a Cigar listing.  Lets abort, throw a pretty
+                    # message, and get on with it.
+                    logging.debug('ABORTING %s:%s:%s' % (aid, category, title))
+                    return
+                else:
+                    logging.debug('CREATED %s:%s:%s:%s' % (aid, category, auction.quantity, title))
             auction.site = 'cbid'
             auction.link = link
             auction.aid = item.find('span', {'class': 'add'}).get('data-id')
@@ -78,9 +125,12 @@ class Parser(object):
         bids = page.findAll('td', {'class': 'lot_winning_bid'})
         high = 0.0
         for bid in bids:
-            nbid = float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0])
-            if nbid > high: 
-                high = nbid
+            try:
+                nbid = float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0])
+                if nbid > high: 
+                    high = nbid
+            except IndexError:
+                pass
         return high
 
     def run(self):
@@ -104,11 +154,9 @@ class Parser(object):
             # the closed price for the auction, tagging the auction as finished
             # (so that we know not to finalize again), and update the timestamp
             # one last time.
-            print 'Closing %s:%s' % (auction.aid, auction.name)
+            logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             page = self.get_page(auction.link)
             auction.price = self.get_final_price(page)
             auction.finished = True
             auction.timestamp = datetime.now()
-
-        # Commit all of the final changes!!!!
-        db.session.commit()
+            db.session.commit()

@@ -2,6 +2,7 @@ from BeautifulSoup import BeautifulSoup
 from datetime import datetime, timedelta
 from app.models import Auction, Brand
 from app.extensions import db
+from . import logging
 import requests, re
 
 
@@ -22,12 +23,25 @@ class Parser(object):
 
     def timestamp_gen(self, text):
         '''Generates a datetime object off of the "time left" component'''
-        try:
-            t = re.findall(r'(\d{1,3})hr (\d{1,2})m', text)
-            return datetime.now() + timedelta(hours=int(t[0][0]), minutes=int(t[0][1]))
-        except IndexError:
-            t = re.findall(r'(\d{1,2})m (\d{1,2})s', text)
-            return datetime.now() + timedelta(minutes=int(t[0][0]), seconds=int(t[0][1]))
+        time = {
+            'days': re.findall(r'(\d{1,3})d', text),
+            'hours': re.findall(r'(\d{1,3})hr', text),
+            'minutes': re.findall(r'(\d{1,2})m', text),
+            'seconds': re.findall(r'(\d{1,2})s', text),
+        }
+
+        for item in time:
+            if len(time[item]) > 0:
+                time[item] = int(time[item][0])
+            else:
+                time[item] = 0
+
+        return datetime.now() + timedelta(
+            days=time['days'],
+            hours=time['hours'],
+            minutes=time['minutes'],
+            seconds=time['seconds']
+        )
 
     def parse_item(self, item, index, package_type):
         '''
@@ -80,11 +94,17 @@ class Parser(object):
             # In a regular auction, the high bidder wins.  In this case its
             # simply a matter of pulling the high bid and converting it into a
             # float.
-            return float(page.find('div', {'id': 'highbid'}).text.strip('$'))
+            try:
+                return float(page.find(attrs={'id': 'highbid'}).text.strip('$'))
+            except:
+                return None
         if 'spicon_yankee' in a_type:
             # In this case we are dealing with a yankee auction.  As there are
             # multiple winners for this auction, we only want the high price.
-            return float(page.find(attrs={'id': 'highbidder'}).findNext('span').text.strip('$'))
+            try:
+                return float(page.find(attrs={'id': 'highbidder'}).findNext('span').text.strip('$'))
+            except:
+                return None
 
     def run(self):
         '''Primary loop'''
@@ -108,11 +128,9 @@ class Parser(object):
             # the closed price for the auction, tagging the auction as finished
             # (so that we know not to finalize again), and update the timestamp
             # one last time.
-            print 'Closing %s:%s' % (auction.aid, auction.name)
+            logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             page = self.get_page(auction.link)
             auction.price = self.get_final_price(page)
             auction.finished = True
             auction.timestamp = datetime.now()
-
-        # Commit all of the final changes!!!!
-        db.session.commit()
+            db.session.commit()
