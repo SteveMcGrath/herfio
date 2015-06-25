@@ -3,7 +3,8 @@ from .extensions import db
 from .models import Auction
 from .forms import SearchForm
 from urllib2 import unquote
-from numpy import median, std, floor
+from math import floor
+from numpy import median, std
 
 
 app = Flask(__name__)
@@ -40,10 +41,10 @@ def search(search_string=None):
                 stats['median_price'] = median(prices)
                 stats['std_deviation'] = std(prices)
                 stats['worst_price'] = min(prices)
-                stats['bad_price'] = prices[int(floor(len(prices)*5/6))]
-                stats['poor_price'] = prices[int(floor(len(prices)*4/6))]
-                stats['good_price'] = prices[int(floor(len(prices)*2/6))]
-                stats['great_price'] = prices[int(floor(len(prices)*1/6))]
+                stats['bad_price'] = prices[floor(len(prices)*5/6)]
+                stats['poor_price'] = prices[floor(len(prices)*4/6)]
+                stats['good_price'] = prices[floor(len(prices)*2/6)]
+                stats['great_price'] = prices[floor(len(prices)*1/6)]
                 stats['best_price'] = max(prices)
             stats['trend'] = [[mktime(i.close.timetuple()), i.price_per_stick] for i in closed_auctions if i.price_per_stick is not None]            
 
