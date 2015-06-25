@@ -80,12 +80,13 @@
 	<div class="container" id="history">
 		<table class="table table-striped">
 			<thead>
-				<td>Title</td><td>Status</td><td>Site</td><td>PPS</td><td>Price</td>
+				<td>Title</td><td>Category</td><td>Status</td><td>Site</td><td>PPS</td><td>Price</td>
 			</thead>
 			<tbody>
 				{% for item in results %}{% if item.price %}
 				<tr>
 					<td>{{ item.name}}</td>
+					<td>{{ item.type }}</td>
 					<td><span class="label label-{% if item.finished %}info{% else %}danger{% endif %}">{% if item.finished %}CLOSED{% else %}OPEN{% endif %}</span></td>
 					<td><a class="btn btn-info btn-xs" href="{{ item.link }}">{{ item.site }}</a></td>
 					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}</td>
