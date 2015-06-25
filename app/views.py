@@ -3,7 +3,7 @@ from .extensions import db
 from .models import Auction
 from .forms import SearchForm
 from urllib2 import unquote
-from numpy import median, std, floor, average
+from numpy import median, std, floor
 
 
 app = Flask(__name__)
@@ -36,7 +36,7 @@ def search(search_string=None):
         if closed_auctions:
             prices = sorted([i.price_per_stick for i in closed_auctions if i.price_per_stick is not None])
             if len(prices) > 0:
-                stats['avg_price'] = average(prices)
+                stats['avg_price'] = sum(prices)/len(prices)
                 stats['median_price'] = median(prices)
                 stats['std_deviation'] = std(prices)
                 stats['worst_price'] = min(prices)

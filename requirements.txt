@@ -10,3 +10,4 @@ BeautifulSoup
 paste
 PasteScript
 wsgiutils
+numpy
