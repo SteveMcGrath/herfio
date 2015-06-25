@@ -1,0 +1,4 @@
+*.pyc
+database.db
+bidparser.log
+migrations/*
