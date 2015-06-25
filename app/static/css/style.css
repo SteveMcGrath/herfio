@@ -1,0 +1,9 @@
+.table-cell {
+    display: table-cell;
+    background: #bbb;
+}
+#search {
+    display: block;
+    width: 100%;
+    background-color: #ddd;
+}
