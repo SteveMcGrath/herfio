@@ -31,11 +31,6 @@ class Parser(object):
         continue to track the price of the auction even though it is not closed, as
         this may become relevent in some searches.
         '''
-        regexes = [
-            re.compile(r'\w+ of (\d{1,3})'),    # Catches "Box of 20"
-            re.compile(r'(\d{1,3})[ -]Cigar'),  # Catches "20 Cigars"
-            re.compile(r'^(\d{1,3})[ -]'),      # Catches "5-" (for 5-Packs)
-        ]
         keywords = [
             'toro', 'robusto', 'belicoso', 'connecticut', 'maduro', 'churchill',
             'torpedo', 'corona', 'single', 'lonsdale', 'corojo', 'sumatra',
@@ -78,23 +73,34 @@ class Parser(object):
                     # These 3 categories are some genetal catch-all categories
                     # and we need to handle the information in a more generic
                     # way.
-                    if '5-pack' in title.lower():
-                        auction.category = '5-pack'
-                    if 'single' in title.lower():
-                        auction.category = 'single'
-                    if 'sampler' in title.lower():
-                        auction.category = 'sampler'
-                    data = title.split(' - ')
-                    if len(data) > 1:
 
-                        for regex in regexes:
-                            # Our first of the dirty hacks is to try to match
-                            # the title up to some of the common formats.  This
-                            # generally seems to work as expected.
-                            if not auction.quantity:
-                                i = regex.findall(data[-1])
-                                if len(i) > 0:
-                                    auction.quantity = int(i[0])
+                    # First lets run through some of the more common paths that
+                    # peopl take...
+                    if '5-pack' in title.lower():
+                        auction.type = '5-pack'
+                        auction.quantity = 5
+                    elif 'single' in title.lower():
+                        auction.type = 'single'
+                        auction.quantity = 1
+                    elif 'sampler' in title.lower():
+                        auction.type = 'sampler'
+                    elif '5 cigars' in title.lower():
+                        auction.type = '5-pack'
+                        auction.quantity = 5
+                    elif '10 cigars' in title.lower():
+                        auction.type = '10-pack'
+                        auction.quantity = 10
+                    elif ' cigars' in title.lower(): 
+                        matches = re.findall(r'(\d{1,3})[ -]cigars', title.lower())
+                        if len(matches) > 0:
+                            auction.type = 'bundle'
+                            auction.quantity = int(matches[0])
+                    else:
+                        matches = re.findall(r'(\w+) of (\d{1,3})', title.lower())
+                        if len(matches) > 0:
+                            auction.type = matches[0][0]
+                            auction.quantity = int(matches[0][1])
+
                     if not auction.quantity:
                         for keyword in keywords:
                             # If all else has failed, we have a list of keywords
