@@ -1,24 +1,31 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from .extensions import db
 from .models import Auction
 from .forms import SearchForm
+from urllib2 import unquote
 
 
 app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
-def search():
+@app.route('/search/<search_string>')
+def search(search_string=None):
     '''Search Page'''
     form = SearchForm()
     results = None
     stats = {}
+    
     if form.validate_on_submit():
-        if form.search.data == '':
-            form.search.data = '[EMPTY]'
+        return redirect('/search/%s' % form.search.data)
+
+    if search_string:
+        search_string = unquote(search_string).decode('utf8')
+        if search_string == '':
+            search_string = '[EMPTY]'
         else:
             q = Auction.query.order_by(Auction.name)
-            for word in form.search.data.split():
+            for word in search_string.split():
                 q = q.filter(Auction.name.like('%%%s%%' % word))
             results = q.all()
         if results:
@@ -29,5 +36,5 @@ def search():
         results=results, 
         form=form,
         stats=stats,
-        search_string=form.search.data,
+        search_string=search_string,
     )

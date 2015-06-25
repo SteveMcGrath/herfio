@@ -33,7 +33,7 @@
         <div id="navbar-main" class="collapse navbar-collapse">
         	{% if results %}
         	<div class="nav navbar-nav navbar-right">
-	        	<form class="navbar-form navbar-left" role="search" method="POST">
+	        	<form class="navbar-form navbar-left" role="search" method="POST" action="/">
 	        		{{ form.hidden_tag() }}
 			        <div class="form-group">
                         <input id="search" type="text" name="search" class="form-control" placeholder="Search">
@@ -52,7 +52,7 @@
 <div class="container">
 	<div class="jumbotron">
 		<h4>Search</h4>
-    	<form method="POST">
+    	<form method="POST" action="/">
     		{{ form.hidden_tag() }}
 	        <div class="form-group">
                 <input id="search" type="text" name="search" class="form-control" placeholder="Search">
@@ -80,7 +80,7 @@
 	<div class="container" id="history">
 		<table class="table table-striped">
 			<thead>
-				<td>Title</td><td>Category</td><td>Status</td><td>Site</td><td>PPS</td><td>Price</td>
+				<td>Title</td><td>Category</td><td>Status</td><td>Site</td><td>Price (PPS/Bid)</td>
 			</thead>
 			<tbody>
 				{% for item in results %}{% if item.price %}
@@ -89,8 +89,12 @@
 					<td>{{ item.type }}</td>
 					<td><span class="label label-{% if item.finished %}info{% else %}danger{% endif %}">{% if item.finished %}CLOSED{% else %}OPEN{% endif %}</span></td>
 					<td><a class="btn btn-info btn-xs" href="{{ item.link }}">{{ item.site }}</a></td>
-					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}</td>
-					<td>{{ '%3.2f' % item.price if item.price else 'N/A'}}</td>
+					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
+						<span class="text-muted">
+							<small>
+								/{{ '%3.2f' % item.price if item.price else 'N/A'}}
+							</small>
+					</td>
 				</tr>
 				{% endif %}{% endfor %}
 			</tbody>
