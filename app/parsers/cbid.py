@@ -69,17 +69,24 @@ class Parser(object):
                     # The next way we can handle this is to look for all of the
                     # 5-Packs in the response and set the quantity to 5.
                     auction.quantity = 5
-                    auction.type = '5_packs'
+                    auction.type = '5-pack'
                 elif category == 'Singles':
                     # Singles should always be a quantity of 1.
                     auction.quantity = 1
-                    auction.type = 'singles'
+                    auction.type = 'single'
                 elif category in ['Specials', 'Samplers', 'Quick-ies']:
                     # These 3 categories are some genetal catch-all categories
                     # and we need to handle the information in a more generic
                     # way.
+                    if '5-pack' in title.lower():
+                        auction.category = '5-pack'
+                    if 'single' in title.lower():
+                        auction.category = 'single'
+                    if 'sampler' in title.lower():
+                        auction.category = 'sampler'
                     data = title.split(' - ')
                     if len(data) > 1:
+
                         for regex in regexes:
                             # Our first of the dirty hacks is to try to match
                             # the title up to some of the common formats.  This

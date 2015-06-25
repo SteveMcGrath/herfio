@@ -9,11 +9,11 @@ import requests, re
 class Parser(object):
     urls = {
         'box': 'http://www.cigarauctioneer.com/search.cfm/st/box',
-        'bundles': 'http://www.cigarauctioneer.com/search.cfm/st/bun',
-        '5_packs': 'http://www.cigarauctioneer.com/search.cfm/st/5pak',
-        '10_packs': 'http://www.cigarauctioneer.com/search.cfm/st/10pak',
-        'samplers': 'http://www.cigarauctioneer.com/search.cfm/st/samp',
-        'singles': 'http://www.cigarauctioneer.com/search.cfm/st/sing',
+        'bundle': 'http://www.cigarauctioneer.com/search.cfm/st/bun',
+        '5-pack': 'http://www.cigarauctioneer.com/search.cfm/st/5pak',
+        '10-pack': 'http://www.cigarauctioneer.com/search.cfm/st/10pak',
+        'sampler': 'http://www.cigarauctioneer.com/search.cfm/st/samp',
+        'single': 'http://www.cigarauctioneer.com/search.cfm/st/sing',
     }
 
     def get_page(self, url):
