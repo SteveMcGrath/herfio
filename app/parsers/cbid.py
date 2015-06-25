@@ -93,6 +93,12 @@ class Parser(object):
                     elif '10 cigars' in title.lower():
                         auction.type = '10-pack'
                         auction.quantity = 10
+                    elif 'pack of 5' in title.lower():
+                        auction.type = '5-pack'
+                        auction.quantity = 5
+                    elif 'pack of 10' in title.lower():
+                        auction.type = '10-pack'
+                        auction.quantity = 10                    
                     elif ' cigars' in title.lower(): 
                         matches = re.findall(r'(\d{1,3})[ -]cigars', title.lower())
                         if len(matches) > 0:
@@ -108,6 +114,8 @@ class Parser(object):
                         if len(matches) > 0:
                             auction.type = matches[0][0]
                             auction.quantity = int(matches[0][1])
+                            if auction.type in ['brick',]:
+                                auction.type = 'bundle'
 
                     if not auction.quantity:
                         for keyword in keywords:
