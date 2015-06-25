@@ -101,7 +101,7 @@
 						{% endif %}
 					</td>
 					<td>{{ item.site }}</td>
-					<td>{{ item.quantity }}</td>
+					<td><span class="pull-right">{{ item.quantity }}</span></td>
 					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
 						<span class="text-muted">
 							<small>
