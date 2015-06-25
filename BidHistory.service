@@ -1,0 +1,20 @@
+[Unit]
+Description=BidHistory Web Service
+After=mariadb.service
+Requires=mariadb.service
+
+[Service]
+Type=forking
+Environment=PYTHONPATH=/opt/bidhistory/site/
+WorkingDirectory=/opt/bidhistory/site
+ExecStart=/usr/bin/paster serve \
+          --pid-file=/var/run/bidhistory.pid \
+          --log-file=/var/log/bidhistory.log \
+          --daemon \
+          /opt/bidhistory/prod.ini start
+ExecStop=/usr/bin/paster serve /opt/bidhistory/prod.ini \
+          --pid-file=/var/run/bidhistory.pid stop
+PIDFile=/var/run/bidhistory.pid
+
+[Install]
+WantedBy=multi-user.target
