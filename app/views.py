@@ -29,7 +29,7 @@ def search(search_string=None):
         #if search_string == '':
         #    search_string = '[EMPTY]'
         #else:
-        a = Auction.query.order_by(Auction.name)
+        a = Auction.query.order_by(Auction.close)
         for word in search_string.split():
             a = a.filter(Auction.name.like('%%%s%%' % word))
         auctions = a.all()
