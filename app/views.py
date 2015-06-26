@@ -39,7 +39,7 @@ def search(search_string=None):
             prices = sorted([i.price_per_stick for i in auctions if i.price_per_stick is not None and i.finished])
             if len(prices) > 0:
                 stats['display'] = True
-                stats['avg'] = sum(prices)/len(prices)
+                stats['avg'] = float(sum(prices)/len(prices))
                 stats['std_deviation'] = float(std(prices))
                 stats['worst'] = prices[-1]
                 stats['bad'] = stats['avg'] - (stats['std_deviation'] * 2)
