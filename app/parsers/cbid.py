@@ -76,7 +76,7 @@ class Parser(object):
 
                     # First lets run through some of the more common paths that
                     # peopl take...
-                    elif '5 cigars' in title.lower():
+                    if '5 cigars' in title.lower():
                         auction.type = '5-pack'
                         auction.quantity = 5
                     elif '10 cigars' in title.lower():
