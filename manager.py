@@ -34,8 +34,14 @@ from app.parsers import parsers
 @manager.command
 def update():
     for parser in parsers:
-        print 'Starting the %s parser...' % parser
         parsers[parser].run()
+
+# This should almost never need to be run.  As it will surely piss off the
+# auction sites, it's commented out unless really needed.
+#@manager.command
+#def price_cleanup():
+#    for parser in parsers:
+#        parsers[parser].run(finish_state=True, get_new_listings=False)
 
 
 if __name__ == '__main__':
