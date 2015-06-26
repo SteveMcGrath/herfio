@@ -106,22 +106,20 @@ class Parser(object):
             except:
                 return None
 
-    def run(self):
+    def run(self, finish_state=False, get_new_listings=True):
         '''Primary loop'''
-        for url in self.urls:
-            # Here we will be interating through the different URLs defined in
-            # the objects and will be handing the individual entries off to the
-            # parse_item function for handling.
-            page = self.get_page(self.urls[url])
-            items = page.findAll('div', attrs={'itemtype': 'http://schema.org/Product'})
-            for item in items:
-                self.parse_item(item, items.index(item) + 1, url)
-
-        # Commit all of the updates and new items
-        #db.session.commit()
+        if get_new_listings:
+            for url in self.urls:
+                # Here we will be interating through the different URLs defined in
+                # the objects and will be handing the individual entries off to the
+                # parse_item function for handling.
+                page = self.get_page(self.urls[url])
+                items = page.findAll('div', attrs={'itemtype': 'http://schema.org/Product'})
+                for item in items:
+                    self.parse_item(item, items.index(item) + 1, url)
 
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
-                                    .filter(Auction.finished == False)\
+                                    .filter(Auction.finished == finish_state)\
                                     .filter(Auction.site == 'cigarauctioneer').all():
             # Now we will need to work our way through all of the closed auctions
             # that haven't been finalized yet.  Finalization is effectively getting

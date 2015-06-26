@@ -58,8 +58,11 @@ class Parser(object):
             except IndexError:
                 auction.name = title
                 if category == 'Boxes':
-                    auction.name, auction.quantity = re.findall(r'^([\W\w]+) \((\d{1,3})\)', title)[0]
-                    auction.type = 'box'
+                    try:
+                        auction.name, auction.quantity = re.findall(r'^([\W\w]+) \((\d{1,3})\)', title)[0]
+                        auction.type = 'box'
+                    except IndexError:
+                        pass
                 elif category == '5-Packs':
                     # The next way we can handle this is to look for all of the
                     # 5-Packs in the response and set the quantity to 5.
@@ -69,7 +72,8 @@ class Parser(object):
                     # Singles should always be a quantity of 1.
                     auction.quantity = 1
                     auction.type = 'single'
-                elif category in ['Specials', 'Samplers', 'Quick-ies']:
+                #elif category in ['Specials', 'Samplers', 'Quick-ies']:
+                if not auction.quantity:
                     # These 3 categories are some genetal catch-all categories
                     # and we need to handle the information in a more generic
                     # way.
@@ -162,21 +166,22 @@ class Parser(object):
                 pass
         return high
 
-    def run(self):
+    def run(self, finish_state=False, get_new_listings=True):
         '''Primary loop'''
         # Here we will be interating through the different URLs defined in
         # the objects and will be handing the individual entries off to the
         # parse_item function for handling.
-        page = self.get_page(self.url)
-        items = page.find('div', attrs={'class': 'cb_product_listing'}).findChildren('tr')[2:]
-        for item in items:
-            self.parse_item(item)
+        if get_new_listings:
+            page = self.get_page(self.url)
+            items = page.find('div', attrs={'class': 'cb_product_listing'}).findChildren('tr')[2:]
+            for item in items:
+                self.parse_item(item)
 
         # Commit all of the updates and new items
         #db.session.commit()
 
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
-                                    .filter(Auction.finished == False)\
+                                    .filter(Auction.finished == finish_state)\
                                     .filter(Auction.site == 'cbid').all():
             # Now we will need to work our way through all of the closed auctions
             # that haven't been finalized yet.  Finalization is effectively getting
