@@ -42,10 +42,10 @@ def search(search_string=None):
                 stats['avg'] = sum(prices)/len(prices)
                 stats['std_deviation'] = float(std(prices))
                 stats['worst'] = prices[-1]
-                stats['bad'] = stats['avg_price'] - (stats['std_deviation'] * 2)
-                stats['poor'] = stats['avg_price'] - stats['std_deviation']
-                stats['good'] = stats['avg_price'] + stats['std_deviation']
-                stats['great'] = stats['avg_price'] + (stats['std_deviation'] * 2)
+                stats['bad'] = stats['avg'] - (stats['std_deviation'] * 2)
+                stats['poor'] = stats['avg'] - stats['std_deviation']
+                stats['good'] = stats['avg'] + stats['std_deviation']
+                stats['great'] = stats['avg'] + (stats['std_deviation'] * 2)
                 stats['best'] = prices[0]
             stats['trend'] = [[mktime(i.close.timetuple()), float(i.price_per_stick)] for i in auctions if i.price_per_stick is not None and i.finished]            
 
