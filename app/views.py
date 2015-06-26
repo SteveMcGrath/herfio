@@ -40,7 +40,7 @@ def search(search_string=None):
             if len(prices) > 0:
                 stats['display'] = True
                 stats['avg_price'] = sum(prices)/len(prices)
-                stats['std_deviation'] = std(prices)
+                stats['std_deviation'] = float(std(prices))
                 stats['worst_price'] = prices[-1]
                 stats['best_price'] = prices[0]
             stats['trend'] = [[mktime(i.close.timetuple()), float(i.price_per_stick)] for i in auctions if i.price_per_stick is not None and i.finished]            
