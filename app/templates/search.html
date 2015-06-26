@@ -104,7 +104,14 @@
                             </a>
                         </span>
                     </td>
-                    <td>{{ item.type }}</td>
+                    <td>
+                        {{ item.type }}
+                        {% if 'pack' not in item.type and 'single' not in item.type and 'sample' not in item.type %}
+                        <small>
+                            /{{ item.quantity }}
+                        </small>
+                        {% endif %}
+                    </td>
                     <td><img src="{{ url_for('.static', filename='images/logos/%s.png' % item.site) }}" /></td>
                     <td>{{ '%sd %sh %sm' % item.time_left }}</td>
                 </tr>
