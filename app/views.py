@@ -31,6 +31,8 @@ def search(search_string=None):
         #else:
         a = Auction.query.order_by(Auction.close)
         for word in search_string.split():
+            if len(word) == 1:
+                word = ' %s ' % word
             a = a.filter(Auction.name.like('%%%s%%' % word))
         auctions = a.all()
         print len(auctions)
