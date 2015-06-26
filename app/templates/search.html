@@ -116,7 +116,7 @@
     <div class="container" id="history">
         <table class="table table-striped">
             <thead>
-                <td>Title</td><td>Category</td><td>Closed</td><td></td><td>QTY</td><td>Price</td>
+                <td>Title</td><td>Category</td><td>Closed</td><td></td><td>Price</td>
             </thead>
             <tbody>
                 {% for item in auctions|sort(reverse=True) %}{% if item.price and item.finished %}
@@ -129,20 +129,25 @@
                             </a>
                         </span>
                     </td>
-                    <td>{{ item.type }}</td>
-                    <td>{% if item.finished %}
-                            {{ item.close.strftime('%Y-%m-%d') }}
-                        {% else %}
-                            <span class="label label-danger">OPEN</span>
+                    <td>
+                        {{ item.type }}
+                        {% if 'pack' not in item.type and 'single' not in item.type and 'sample' not in item.type %}
+                        <small>
+                            /{{ item.quantity }}
+                        </small>
                         {% endif %}
                     </td>
+                    <td>{{ item.close.strftime('%Y-%m-%d') }}</td>
                     <td><img src="{{ url_for('.static', filename='images/logos/%s.png' % item.site) }}" /></td>
-                    <td><span class="pull-right">{{ item.quantity }}</span></td>
-                    <td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
+                    <td>
+                        <big>
+                            {{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
+                        </big>
                         <span class="text-muted">
                             <small>
                                 /{{ '%3.2f' % item.price if item.price else 'N/A'}}
                             </small>
+                        </span>
                     </td>
                 </tr>
                 {% endif %}{% endfor %}
