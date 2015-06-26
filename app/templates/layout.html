@@ -1,0 +1,22 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/google.html" as google %}
+
+{% block head %}
+{{ super() }}
+{{ fixes.ie8() }}
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.flot.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.flot.time.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/bidhistory.js') }}"></script>
+{% endblock head %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('.static', filename='css/bootstrap.min.css') }}" media="screen" />
+<link rel="stylesheet" href="{{ url_for('.static', filename='css/bootswatch.min.css') }}" />
+<link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}" />
+{% endblock styles %}
+
+{% include "navbar.html" %}

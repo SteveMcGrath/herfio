@@ -1,0 +1,50 @@
+<ul class="list-group">
+	<li class="list-group-item">
+		Best Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['best_price'] }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Great Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['avg_price'] + (stats['std_deviation'] * 2) }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Good Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['good_price'] + stats['std_deviation'] }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Average Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['avg_price'] }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Poor Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['poor_price'] - stats['std_deviation'] }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Bad Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['bad_price'] - (stats['std_deviation'] * 2) }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Worst Price Per Stick
+		<span class="badge">
+			{{ '%3.2f' % stats['worst_price'] }}
+		</span>
+	</li>
+	<li class="list-group-item">
+		Standard Deviation
+		<span class="badge">
+			{{ '%3.2f' % stats['std_deviation'] }}
+		</span>
+	</li>
+</ul>

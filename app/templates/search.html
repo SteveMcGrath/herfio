@@ -1,157 +1,27 @@
-{% extends "bootstrap/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% import "bootstrap/fixes.html" as fixes %}
-{% import "bootstrap/google.html" as google %}
-
-{% block head %}
-{{ super() }}
-{{ fixes.ie8() }}
-<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.min.js') }}"></script>
-<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.flot.min.js') }}"></script>
-<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/jquery.flot.time.min.js') }}"></script>
-<script language="javascript" type="text/javascript" src="{{ url_for('.static', filename='js/bidhistory.js') }}"></script>
-{% endblock head %}
-
-{% block styles %}
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('.static', filename='css/bootstrap.min.css') }}" media="screen" />
-<link rel="stylesheet" href="{{ url_for('.static', filename='css/bootswatch.min.css') }}" />
-<link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}" />
-{% endblock styles %}
-
-{% block navbar %}
-<div class="navbar navbar-default navbar-fixed-top">
-	<div class="container">
-		<div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-main">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url_for('search') }}">
-                {#<img alt="{{ config.SITE_NAME }}" 
-                     src="{{ url_for('.static', filename='images/brand.png') }}" />#}
-                BidHistory
-            </a>
-        </div>
-        <div id="navbar-main" class="collapse navbar-collapse">
-        	{% if results %}
-        	<div class="nav navbar-nav navbar-right">
-	        	<form class="navbar-form navbar-left" role="search" method="POST" action="/">
-	        		{{ form.hidden_tag() }}
-			        <div class="form-group">
-                        <input id="search" type="text" name="search" class="form-control" placeholder="Search">
-			        </div>
-			        <button type="submit" class="btn btn-default">Search</button>
-			    </form>
-		    </div>
-		    {% endif %}
-		</div>
-	</div>
-</div>
-{% endblock %}
+{% extends "layout.html" %}
 
 {% block content %}
-{% if not results %}
-<div class="container">
-	<div class="jumbotron">
-		<h4>Search</h4>
-    	<form method="POST" action="/">
-    		{{ form.hidden_tag() }}
-	        <div class="form-group">
-                <input id="search" type="text" name="search" class="form-control" placeholder="Search">
-		        <span class="input-group-addon">
-		        	<button type="submit" class="btn btn-default">Search</button>
-		        </span>
-	        </div>
-	    </form>
-	    {% if search_string %}
-	    <p>no results for <strong>{{ search_string }}</strong> found.</p>
-	    {% endif %}
-	</div>
-</div>
+
+{% if not auctions %}
+{% block spash_content %}{% endblock %}
 {% else %}
 
 <div class="container">
 	<div class="container" id="analytics">
 		<h2>Results for <strong><i>{{ search_string }}</i></strong></h2>
-		<ul class="list-group">
-			<li class="list-group-item">High Price Per Stick<span class="badge">{{ '%3.2f' % stats['high'] }}</span></li>
-			<li class="list-group-item">Low Price Per Stick<span class="badge">{{ '%3.2f' % stats['low'] }}</span></li>
-			<li class="list-group-item">Average Price Per Stick<span class="badge">{{ '%3.2f' % stats['avg'] }}</span></li>
-		</ul>
+		{% if stats['display'] %}
+			{% block analysis %}{% endblock %}
+		{% endif %}
 	</div>
-	<div class="container" id="trends">
-	<div class="container" id="trend-placeholder"
-	</div>
-	<button class="btn btn-primary" onclick="toggle_visibility('current-auctions');">Toggler Open Auctions</button>
-	<div class="container" id="current-auctions">
-		<table class="table table-striped">
-			<thead>
-				<td>Title</td><td>Category</td><td>Site</td>
-			</thead>
-			<tbody>
-				{% for item in open_auctions %}{% if item.price %}
-				<tr>
-					<td>
-						{{ item.name}}
-						<span class="pull-right">
-							<a class="btn btn-info btn-xs" href="{{ item.link }}">
-								<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
-							</a>
-						</span>
-					</td>
-					<td>{{ item.type }}</td>
-					<td>{{ item.site }}</td>
-				</tr>
-				{% endif %}{% endfor %}
-			</tbody>
-		</table>
-	</div>
-	<div class="container" id="history">
-		<table class="table table-striped">
-			<thead>
-				<td>Title</td><td>Category</td><td>Closed</td><td>Site</td><td>QTY</td><td>Price</td>
-			</thead>
-			<tbody>
-				{% for item in closed_auctions %}{% if item.price %}
-				<tr>
-					<td>
-						{{ item.name}}
-						<span class="pull-right">
-							<a class="btn btn-info btn-xs" href="{{ item.link }}">
-								<span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
-							</a>
-						</span>
-					</td>
-					<td>{{ item.type }}</td>
-					<td>{% if item.finished %}
-							{{ item.close.strftime('%Y-%m-%d') }}
-						{% else %}
-							<span class="label label-danger">OPEN</span>
-						{% endif %}
-					</td>
-					<td>{{ item.site }}</td>
-					<td><span class="pull-right">{{ item.quantity }}</span></td>
-					<td>{{ '%3.2f' % item.price_per_stick if item.price_per_stick else 'N/A'}}
-						<span class="text-muted">
-							<small>
-								/{{ '%3.2f' % item.price if item.price else 'N/A'}}
-							</small>
-					</td>
-				</tr>
-				{% endif %}{% endfor %}
-			</tbody>
-		</table>
-	</div>
+	{% block trending %}{% endblock %}
+	{% block active_auctions %}{% endblock %}
+	{% block closed_auctions %}{% endblock %}
 </div>
-<script type="text/javascript">
-	$(function() {
-		var d = {{ stats['trend'] }}
-		$.plot("#trend-placeholder", [d], {
-			xaxis: { mode: "time" }
-		});
-	})
-</script>
 {% endif %}
 {% endblock %}
+
+{% include "splash_content.html" %}
+{% include "price_analysis.html" %}
+{% include "trending.html" %}
+{% include "active_auctions.html" %}
+{% include "closed_auctions.html" %}
