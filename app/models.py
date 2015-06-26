@@ -32,3 +32,14 @@ class Auction(db.Model):
             return self.price / self.quantity
         else:
             return None
+
+    @hybrid_property
+    def time_left(self):
+        if not self.finished:
+            delta = datetime.now() - self.close
+            days = delta.days
+            hours = delta.seconds / 3600
+            minutes = (delta.seconds % 3600) / 60
+            return days, hours, minutes
+        else:
+            return 0, 0, 0
