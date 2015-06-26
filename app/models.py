@@ -15,7 +15,7 @@ class Auction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     type = db.Column(db.String(32))
-    price = db.Column(db.Numeric(2))
+    price = db.Column(db.Numeric(precision=7,scale=2))
     timestamp = db.Column(db.DateTime)
     aid = db.Column(db.String(16))
     site = db.Column(db.String(32))
