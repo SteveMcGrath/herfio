@@ -40,7 +40,7 @@ class Auction(db.Model):
             days = delta.days
             hours = delta.seconds / 3600
             minutes = (delta.seconds % 3600) / 60
-            if days < 0 or hours < 0 or minutes < 0
+            if days < 0 or hours < 0 or minutes < 0:
                 days = 0
                 hours = 0
                 minutes = 0
