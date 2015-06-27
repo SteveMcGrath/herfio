@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from sqlalchemy import not_
 from .extensions import db
 from .models import Auction
 from .forms import SearchForm
@@ -21,24 +22,60 @@ def search(search_string=None):
     stats = {'display': False}
     
     if form.validate_on_submit():
-        return redirect('/search/%s' % form.search.data)
+        return redirect('/search/%s' % form.search.data.replace(' ', '_'))
 
     if search_string:
         print search_string
-        search_string = unquote(search_string).decode('utf8')
+        search_string = unquote(search_string).decode('utf8').replace('_', ' ')
         #if search_string == '':
         #    search_string = '[EMPTY]'
         #else:
         a = Auction.query.order_by(Auction.close)
         for word in search_string.split():
-            if len(word) == 1:
-                word = ' %s ' % word
-            a = a.filter(Auction.name.like('%%%s%%' % word))
+            # lets go ahead and allow for some parameterization...
+            if '=' in word:
+                name, value = word.split('=')
+                if name.lower() == 'category':
+                    if value[0] == '-':
+                        a = a.filter(Auction.type != value[1:])
+                    else:
+                        a = a.filter(Auction.type == value)
+            else:
+                # is this a negative filter?
+                if word[0] == '-':
+                    inverse = True
+                else:
+                    inverse = False
+
+                # Is the word a single character?  if it is, when we will need to
+                # add spaces around it.
+                if len(word) == 1:
+                    word = ' %s ' % word
+
+                if inverse:
+                    a = a.filter(not_(Auction.name.contains(word[1:])))
+                else:
+                    a = a.filter(Auction.name.contains(word))
         auctions = a.all()
         print len(auctions)
 
         if auctions:
-            prices = sorted([i.price_per_stick for i in auctions if i.price_per_stick is not None and i.finished])
+            # First we are going to pull out the subset of the data that we will
+            # be using.  We dont want to have any Null values (which would
+            # indicate that the auction never sold for anything) and we don't
+            # want to have samplers in our dataset either (as they are a veriety
+            # if sticks and the prices won't jive with the data).
+            p_auctions = [i for i in auctions if i.price_per_stick is not None and i.finished and i.type is not 'sampler']
+
+            # First we are going to generate the trendline data.  For this we
+            # need to have the timestamp of the close and the price.
+            stats['trend'] = [[mktime(i.close.timetuple()), float(i.price_per_stick)] for i in p_auctions]
+
+            # Now for all the fun math stuff.  We will be sorting the prices so
+            # that they are in order from low to high.  Once we have that we
+            # can start to use that to build a profile of what this price range
+            # really looks like.
+            prices = sorted([i.price_per_stick for i in p_auctions])
             if len(prices) > 0:
                 stats['display'] = True
                 stats['avg'] = float(sum(prices)/len(prices))
@@ -48,9 +85,7 @@ def search(search_string=None):
                 stats['good'] = stats['avg'] - stats['std_deviation']
                 stats['poor'] = stats['avg'] + stats['std_deviation']
                 stats['bad'] = stats['avg'] + (stats['std_deviation'] * 2)
-                stats['worst'] = prices[-1]
-
-            stats['trend'] = [[mktime(i.close.timetuple()), float(i.price_per_stick)] for i in auctions if i.price_per_stick is not None and i.finished]            
+                stats['worst'] = prices[-1]            
 
     return render_template('search.html',
         auctions=auctions,
