@@ -30,7 +30,7 @@ def search(search_string=None):
         #if search_string == '':
         #    search_string = '[EMPTY]'
         #else:
-        a = Auction.query.order_by(Auction.close)
+        a = Auction.query
         for word in search_string.split():
             # lets go ahead and allow for some parameterization...
             if '=' in word:
@@ -56,7 +56,7 @@ def search(search_string=None):
                     a = a.filter(not_(Auction.name.contains(word[1:])))
                 else:
                     a = a.filter(Auction.name.contains(word))
-        auctions = a.all()
+        auctions = a.order_by(Auction.close).all()
         print len(auctions)
 
         if auctions:
