@@ -12,7 +12,7 @@ class Parser(object):
         resp = requests.get(url, **kwargs)
         return BeautifulSoup(resp.content)
 
-    def item_parse(self, item_id):
+    def item_parse(self, item_id, price, page=None):
         '''
         Parses the CigarMonster AJAX API output
         '''
@@ -34,7 +34,8 @@ class Parser(object):
             # AJAX popin to display the details.  We will be using that to get
             # a consistant point of information.
             url = 'http://www.cigarmonster.com/include/ajax_getPopin.cfm'
-            page = self.get_page(url, params={'num': item_id})
+            if not page:
+                page = self.get_page(url, params={'num': item_id})
 
             # Lets populate the attributes dictionary with the information we
             # are pulling from the popin.
@@ -63,12 +64,16 @@ class Parser(object):
                     auction.type = 'single'
 
                 # Next we will need to get the price.
-                auction.price = float(page.find('div', {'class': 'tal'}).text.strip('MSRP: $'))
+                auction.price = price
                 
                 # As not all of the CigarMonster auctions have a shape in the 
                 # name of the auction, we will want to add this for searching
                 # purposes.  We will append (SHAPE) to the end of the deal name.
-                auction.name = page.find('div', {'class': 'mashupitempopdes'}).text + ' (%s)' % attrs['shape']
+                if page.find('div', {'class': 'mashupitempopdes'}):
+                    name = page.find('div', {'class': 'mashupitempopdes'}).text
+                else:
+                    name = page.find('h2', {'class': 'monsteritemdes'}).text
+                auction.name = name + ' (%s)' % attrs['shape']
                 
                 # So if we see any indications that this is a sampler, then we
                 # should re-type it to be as such.
@@ -88,7 +93,11 @@ class Parser(object):
     def run(self):
         page = self.get_page('http://www.cigarmonster.com')
         for item in page.findAll('a', {'class': 'mashupItem'}):
-            self.item_parse(item.get('name'))
+            price = float(item.findNext('span', {'class': 'mashupitemprice'}).contents[0].strip('$'))
+            self.item_parse(item.get('name'), price=price)
+        if page.find('div', {'id': 'skupic'}):
+            price = float(page.find('span', {'itemprop': 'price'}).text.strip('$'))
+            self.item_parse(0, price=price, page=page)
         stmt = db.update(Auction)\
                       .where(Auction.site == 'cigarmonster')\
                       .where(Auction.close < datetime.now())\
