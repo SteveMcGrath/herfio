@@ -3,3 +3,5 @@ database.db
 bidparser.log
 migrations/*
 config.py
+.DS_Store
+app/static/images/.DS_Store
