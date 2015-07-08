@@ -44,7 +44,6 @@ class Parser(object):
                 name = a.text.lower().strip(':')
                 value = a.findNext('div', {'class': 'detail-r'}).text.lower()
                 attrs[name] = value
-            print attrs
 
             # If there is no quantity in the popin, then this isn't specifically
             # a cigar item and we will want to ignore it.
@@ -95,7 +94,7 @@ class Parser(object):
         for item in page.findAll('a', {'class': 'mashupItem'}):
             price = float(item.findNext('span', {'class': 'mashupitemprice'}).contents[0].strip('$'))
             self.item_parse(item.get('name'), price=price)
-        if page.find('div', {'id': 'skupic'}):
+        if page.find('div', {'class': 'monsterdealcurrent'}):
             price = float(page.find('span', {'itemprop': 'price'}).text.strip('$'))
             self.item_parse(0, price=price, page=page)
         stmt = db.update(Auction)\
