@@ -69,14 +69,21 @@ def search(search_string=None):
 
             # First we are going to generate the trendline data.  For this we
             # need to have the timestamp of the close and the price.
-            stats['trend'] = [[mktime(i.close.timetuple()), float(i.price_per_stick)] for i in p_auctions]
+            stats['trend'] = [[mktime(i.close.timetuple()) * 1000, float(i.price_per_stick)] for i in p_auctions]
 
             # Now for all the fun math stuff.  We will be sorting the prices so
             # that they are in order from low to high.  Once we have that we
             # can start to use that to build a profile of what this price range
             # really looks like.
             prices = sorted([i.price_per_stick for i in p_auctions])
+            heat = {}
+            for price in prices:
+                iprice = int(price * 100)
+                if iprice not in heat:
+                    heat[iprice] = 0
+                heat[iprice] += 1
             if len(prices) > 0:
+                stats['heatmap'] = [[float(i) / 100, heat[i]] for i in heat]
                 stats['display'] = True
                 stats['avg'] = float(sum(prices)/len(prices))
                 stats['std_deviation'] = float(std(prices))

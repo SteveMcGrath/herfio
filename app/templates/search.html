@@ -81,6 +81,7 @@
         {% endif %}
     </div>
     <div class="container" id="trends">
+        <div class="container" id="heatmap-placeholder" style="height:100px;"></div>
         <div class="container" id="trend-placeholder" style="height:200px"></div>
     </div>
 
@@ -138,7 +139,7 @@
                     </td>
                     <td>
                         {{ item.type }}
-                        {% if 'pack' not in item.type and 'single' not in item.type and 'sample' not in item.type %}
+                        {% if item.type != None and 'pack' not in item.type and 'single' not in item.type and 'sample' not in item.type %}
                         <small>
                             /{{ item.quantity }}
                         </small>
@@ -174,12 +175,25 @@
                 color: 'rgba(44, 62, 80, 1)',
                 data: {{ stats['trend'] }}
             };
+            var h = {
+                data: {{ stats['heatmap'] }},
+                bars: {
+                    show: true,
+                    barWidth: .1,
+                },
+            };
             $.plot($("#trend-placeholder"), [d], {
                 xaxis: { mode: "time" },
                 series: {lines: {
                     fill: true,
                     fillColor: "rgba(44, 62, 80, 0.6)"
                 }},
+            });
+            $.plot($("#heatmap-placeholder"), [h], {
+                yaxis: {show: false},
+                xaxis: {
+                    tickDecimals: 2
+                },
             });
         });
     })(jQuery);
