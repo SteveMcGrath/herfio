@@ -171,29 +171,38 @@
 <script type="text/javascript">
     (function($) {
         $(function() {
-            var d = {
+            var trend = {
                 color: 'rgba(44, 62, 80, 1)',
                 data: {{ stats['trend'] }}
             };
-            var h = {
+            var heat = {
+                color: 'rgba(0, 0, 0, 1)',
                 data: {{ stats['heatmap'] }},
                 bars: {
                     show: true,
                     barWidth: .1,
                 },
             };
-            $.plot($("#trend-placeholder"), [d], {
+            $.plot($("#trend-placeholder"), [trend], {
                 xaxis: { mode: "time" },
                 series: {lines: {
                     fill: true,
                     fillColor: "rgba(44, 62, 80, 0.6)"
                 }},
             });
-            $.plot($("#heatmap-placeholder"), [h], {
+            $.plot($("#heatmap-placeholder"), [heat], {
                 yaxis: {show: false},
-                xaxis: {
-                    tickDecimals: 2
-                },
+                xaxis: {tickDecimals: 2},
+                grid: {
+                    markings: [
+                        {xaxis: {from: {{ stats['great'] }}, to: {{ stats['good'] }}}, color: "#357abd"},
+                        {xaxis: {from: {{ stats['good'] }}, to: {{ stats['avg'] }}}, color: "#4cae4c"},
+                        {xaxis: {from: {{ stats['avg'] }}, to: {{ stats['poor'] }}}, color: "#fdc431"},
+                        {xaxis: {from: {{ stats['poor'] }}, to: {{ stats['bad'] }}}, color: "#ee9336"},
+                    ],
+                    hoverable: true,
+                    autoHighlight: true,
+                }
             });
         });
     })(jQuery);
