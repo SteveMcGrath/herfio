@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 
+{% set field = request.args.get('sort')|default(None) %}
+{% set direction = request.args.get('reversed')|int(default=1) %}
+
 {% block content %}
 
 {% if not auctions %}
@@ -85,10 +88,6 @@
         <div class="container" id="trend-placeholder" style="height:200px"></div>
     </div>
 
-    <button class="btn btn-primary btn-sm" 
-            onclick="toggle_visibility('current-auctions');">
-        Toggle Open Auctions
-    </button>
     <div class="container" id="current-auctions" style="display: none;">
         <table class="table table-striped">
             <thead>
@@ -107,7 +106,7 @@
                     </td>
                     <td>
                         {{ item.type }}
-                        {% if 'pack' not in item.type and 'single' not in item.type and 'sample' not in item.type %}
+                        {% if item.type and 'pack' not in item.type and 'single' not in item.type and 'sample' not in item.type %}
                         <small>
                             /{{ item.quantity }}
                         </small>
@@ -121,13 +120,29 @@
         </table>
     </div>
 
+    <div class="container">
+        <div class="row">
+            <button class="btn btn-primary btn-sm" onclick="toggle_visibility('current-auctions');">Open Auctions</button>
+            <a class="btn btn-sm btn-{% if direction %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=(not direction)|int, sort=field) }}">Reversed</a>
+             <div class="btn-group">
+            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown-menu" aria-haspop="true" aria-expanded="false">
+                Sort <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ url_for('search', search_string=search_string, reversed=direction, sort='name') }}">Auction Name</a></li>
+                <li><a href="{{ url_for('search', search_string=search_string, reversed=direction, sort='price_per_stick') }}">Price Per Stick</a></li>
+                <li><a href="{{ url_for('search', search_string=search_string, reversed=direction, sort='price') }}">Auction Price</a></li>
+            </ul>
+            </div>
+        </div>
+    </div>
     <div class="container" id="history">
         <table class="table table-striped">
             <thead>
                 <td>Title</td><td>Category</td><td>Closed</td><td></td><td>Price</td>
             </thead>
             <tbody>
-                {% for item in auctions|sort(reverse=True) %}{% if item.price and item.finished %}
+                {% for item in auctions|sort(attribute=field, reverse=direction) %}{% if item.price and item.finished %}
                 <tr>
                     <td>
                         {{ item.name}}
