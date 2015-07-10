@@ -25,7 +25,7 @@ def search(search_string=None):
         return redirect('/search/%s' % form.search.data.replace(' ', '_'))
 
     if search_string == '':
-        return redirect(url_for('search'))
+        search_string = None
 
     if search_string:
         search_string = unquote(search_string).decode('utf8').replace('_', ' ')
@@ -56,7 +56,6 @@ def search(search_string=None):
                 else:
                     a = a.filter(Auction.name.contains(word))
         auctions = a.order_by(Auction.close).all()
-        print len(auctions)
 
         if auctions:
             # First we are going to pull out the subset of the data that we will
@@ -91,12 +90,12 @@ def search(search_string=None):
                 stats['display'] = True
                 stats['avg'] = float(sum(prices)/len(prices))
                 stats['std_deviation'] = float(std(prices))
-                stats['best'] = prices[0]
+                stats['best'] = float(prices[0])
                 stats['great'] = stats['avg'] - (stats['std_deviation'] * 2)
                 stats['good'] = stats['avg'] - stats['std_deviation']
                 stats['poor'] = stats['avg'] + stats['std_deviation']
                 stats['bad'] = stats['avg'] + (stats['std_deviation'] * 2)
-                stats['worst'] = prices[-1]
+                stats['worst'] = float(prices[-1])
     if request.mimetype == 'application/json':
         return jsonify(
             auctions=[a.serialize() for a in auctions],
