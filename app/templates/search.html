@@ -8,7 +8,6 @@
 {% if not auctions %}
 <div class="container">
     <div class="jumbotron">
-        <h4>Search</h4>
         <form method="POST" action="/">
             {{ form.hidden_tag() }}
             <div class="input-group">
@@ -24,6 +23,36 @@
         <p>no results for <strong>{{ search_string }}</strong> found.</p>
         {% endif %}
     </div>
+    <div class="container">
+        <h2>What is BidHistory?</h2>
+        <p>BidHistory is a tool designed to provide some statistics and temporal information about Cigar auctions
+            across various auction sites.  As BidHistory is early in it's development, it is not feature complete
+            and may change over time.  We welcome any input from our users and feel free to file bug reports or
+            feature requests on the <a href="http://github/.com/stevemcgrath/bidhistory">GitHub Page</a>.
+        </p>
+        <h2>How can I use this?</h2>
+        <ul>
+            <li><strong>Word order doesnt matter</strong> - This means that the searches: <i>"arturo fuente"</i> and 
+                <i>"fuente arturo"</i> will yeild the same results.  The advantage of handling searches this way is 
+                that you aren't forced to remember the exact word order of something to search, and can just keep 
+                tacking on words to narrow down the search as you go.
+            </li>
+            <li><strong>Negative searching</strong> - Are you looking for something and the search is just about there,
+                but you want to remove a couple of pesky items?  Well then just prepend a "-" sign to the beginning of
+                the word that you don't want to see.  The "-" sign will tell BidHistory to search for items that <i>don't</i>
+                have that word, allowing you to continue to narrow down your dataset.
+            </li>
+            <li><strong>Price Per Stick Computation</strong> - BidHistory attempts to normalize all of the different
+                auctions down to a "price per stick" number.  This means that regardless of if its a 5-pack, 10-pack,
+                or a box of 24, you can see what the price you would be paying is on a per cigar level.  All of BidHistory's
+                analytics are leveraging these numbers to try to make this information as useful as possible.
+            </li>
+            <li><strong>More to come!</strong> - BidHistory is under active development and features are being tweaked,
+                improved, and added all of the time.  If you have a bug report or a feature request, please let us know 
+                on the <a href="http://github.com/stevemcgrath/bidhistory">GitHub page</a>.  Further all of the cose is 
+                <i>Open Sourced</i> so that you can take a look at how we are doing things.
+            </li>
+        </ul>
 </div>
 {% else %}
 <div class="container">
