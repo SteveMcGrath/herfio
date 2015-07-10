@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set field = request.args.get('sort')|default(None) %}
+{% set field = request.args.get('sort')|default(None, 'close') %}
 {% set direction = request.args.get('reversed')|int(default=1) %}
 
 {% block content %}
@@ -26,7 +26,6 @@
     </div>
 </div>
 {% else %}
-
 <div class="container">
     <div class="container" id="analytics">
         <h2>Results for <strong><i>{{ search_string }}</i></strong></h2>
@@ -122,17 +121,14 @@
 
     <div class="container">
         <div class="row">
-            <button class="btn btn-primary btn-sm" onclick="toggle_visibility('current-auctions');">Open Auctions</button>
-            <a class="btn btn-sm btn-{% if direction %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=(not direction)|int, sort=field) }}">Reversed</a>
-             <div class="btn-group">
-            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown-menu" aria-haspop="true" aria-expanded="false">
-                Sort <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="{{ url_for('search', search_string=search_string, reversed=direction, sort='name') }}">Auction Name</a></li>
-                <li><a href="{{ url_for('search', search_string=search_string, reversed=direction, sort='price_per_stick') }}">Price Per Stick</a></li>
-                <li><a href="{{ url_for('search', search_string=search_string, reversed=direction, sort='price') }}">Auction Price</a></li>
-            </ul>
+            <button class="btn btn-warning btn-sm" onclick="toggle_visibility('current-auctions');">Open Auctions</button>
+            <div class="btn-group">
+                <a href="#" class="btn btn-default disabled btn-sm">Sorting Options : </a>
+                <a class="btn btn-sm btn-{% if field == 'name' %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=direction, sort='name') }}">Auction Name</a>
+                <a class="btn btn-sm btn-{% if field == 'price_per_stick' %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=direction, sort='price_per_stick') }}">Price Per Stick</a>
+                <a class="btn btn-sm btn-{% if field == 'price' %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=direction, sort='price') }}">Auction Price</a>
+                <a class="btn btn-sm btn-{% if field == 'close' %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=direction, sort='close') }}">Close Date</a>
+                <a class="btn btn-sm btn-{% if direction %}success{% else %}primary{% endif %}" href="{{ url_for('search', search_string=search_string, reversed=(not direction)|int, sort=field) }}">Reversed Order</a>
             </div>
         </div>
     </div>
