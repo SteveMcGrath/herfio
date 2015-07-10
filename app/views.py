@@ -99,7 +99,7 @@ def search(search_string=None):
                 stats['worst'] = prices[-1]
     if request.mimetype == 'application/json':
         return jsonify(
-            auctions=auctions,
+            auctions=[a.serialize() for a in auctions],
             stats=stats,
             search_string=search_string
         )
