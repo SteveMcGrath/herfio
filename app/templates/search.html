@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set field = request.args.get('sort')|default(None, 'close') %}
+{% set field = request.args.get('sort') or 'close' %}
 {% set direction = request.args.get('reversed')|int(default=1) %}
 
 {% block content %}
