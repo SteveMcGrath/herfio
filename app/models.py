@@ -54,7 +54,7 @@ class Auction(db.Model):
             'id': self.id,
             'name': self.name,
             'type': self.type,
-            'price': self.price,
+            'price': float(self.price),
             'price_per_stick': self.price_per_stick,
             'timestamp': mktime(self.timestamp.utctimetuple()),
             'close': mktime(self.close.utctimetuple()),
