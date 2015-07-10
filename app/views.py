@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from sqlalchemy import not_
 from .extensions import db
 from .models import Auction
@@ -24,12 +24,11 @@ def search(search_string=None):
     if form.validate_on_submit():
         return redirect('/search/%s' % form.search.data.replace(' ', '_'))
 
+    if search_string == '':
+        return redirect(url_for('search'))
+
     if search_string:
-        print search_string
         search_string = unquote(search_string).decode('utf8').replace('_', ' ')
-        #if search_string == '':
-        #    search_string = '[EMPTY]'
-        #else:
         a = Auction.query
         for word in search_string.split():
             # lets go ahead and allow for some parameterization...
@@ -65,17 +64,21 @@ def search(search_string=None):
             # indicate that the auction never sold for anything) and we don't
             # want to have samplers in our dataset either (as they are a veriety
             # if sticks and the prices won't jive with the data).
-            p_auctions = [i for i in auctions if i.price_per_stick is not None and i.finished and i.type is not 'sampler']
-
-            # First we are going to generate the trendline data.  For this we
-            # need to have the timestamp of the close and the price.
-            stats['trend'] = [[mktime(i.close.timetuple()) * 1000, float(i.price_per_stick)] for i in p_auctions]
+            pa = []
+            trend = []
+            prices = []
+            heat = {}
+            for auction in auctions:
+                if auction.price_per_stick is not None and auction.finished and auction.type != 'sampler':
+                    pa.append(auction)
+                    trend.append([mktime(auction.close.timetuple()) * 1000, float(auction.price_per_stick)])
+                    prices.append(auction.price_per_stick)
 
             # Now for all the fun math stuff.  We will be sorting the prices so
             # that they are in order from low to high.  Once we have that we
             # can start to use that to build a profile of what this price range
             # really looks like.
-            prices = sorted([i.price_per_stick for i in p_auctions])
+            prices = sorted(prices)
             heat = {}
             for price in prices:
                 iprice = int(price * 100)
@@ -84,6 +87,7 @@ def search(search_string=None):
                 heat[iprice] += 1
             if len(prices) > 0:
                 stats['heatmap'] = [[float(i) / 100, heat[i]] for i in heat]
+                stats['trend'] = trend
                 stats['display'] = True
                 stats['avg'] = float(sum(prices)/len(prices))
                 stats['std_deviation'] = float(std(prices))
@@ -92,11 +96,17 @@ def search(search_string=None):
                 stats['good'] = stats['avg'] - stats['std_deviation']
                 stats['poor'] = stats['avg'] + stats['std_deviation']
                 stats['bad'] = stats['avg'] + (stats['std_deviation'] * 2)
-                stats['worst'] = prices[-1]            
-
-    return render_template('search.html',
-        auctions=auctions,
-        form=form,
-        stats=stats,
-        search_string=search_string,
-    )
+                stats['worst'] = prices[-1]
+    if request.mimetype == 'application/json':
+        return jsonify(
+            auctions=auctions,
+            stats=stats,
+            search_string=search_string
+        )
+    else:        
+        return render_template('search.html',
+            auctions=auctions,
+            form=form,
+            stats=stats,
+            search_string=search_string,
+        )

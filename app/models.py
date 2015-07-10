@@ -1,5 +1,6 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
+from time import mktime
 from app.extensions import db
 
 
@@ -47,3 +48,19 @@ class Auction(db.Model):
             return days, hours, minutes
         else:
             return 0, 0, 0
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'type': self.type,
+            'price': self.price,
+            'price_per_stick': self.price_per_stick,
+            'timestamp': mktime(self.timestamp.utctimetuple()),
+            'close': mktime(self.close.utctimetuple()),
+            'auction_id': self.aid,
+            'site': self.site,
+            'link': self.link,
+            'quantity': self.quantity,
+            'finished': self.finished,
+        }
