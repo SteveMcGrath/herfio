@@ -18,6 +18,9 @@ app = Flask(__name__)
 def search(search_string=None):
     '''Search Page'''
     form = SearchForm()
+    full_search = request.args.get('full_search')
+    site = request.args.get('site')
+    print full_search, site
     auctions = None
     stats = {'display': False}
     
@@ -27,34 +30,39 @@ def search(search_string=None):
     if search_string == '':
         search_string = None
 
-    if search_string:
-        search_string = unquote(search_string).decode('utf8').replace('_', ' ')
-        a = Auction.query
-        for word in search_string.split():
-            # lets go ahead and allow for some parameterization...
-            if '=' in word:
-                name, value = word.split('=')
-                if name.lower() == 'category':
-                    if value[0] == '-':
-                        a = a.filter(Auction.type != value[1:])
+    if search_string or full_search:
+        if full_search:
+            a = Auction.query.filter(Auction.name.contains(full_search))
+        else:
+            search_string = unquote(search_string).decode('utf8').replace('_', ' ')
+            a = Auction.query
+            for word in search_string.split():
+                # lets go ahead and allow for some parameterization...
+                if '=' in word:
+                    name, value = word.split('=')
+                    if name.lower() == 'category':
+                        if value[0] == '-':
+                            a = a.filter(Auction.type != value[1:])
+                        else:
+                            a = a.filter(Auction.type == value)
+                else:
+                    # is this a negative filter?
+                    if word[0] == '-':
+                        inverse = True
                     else:
-                        a = a.filter(Auction.type == value)
-            else:
-                # is this a negative filter?
-                if word[0] == '-':
-                    inverse = True
-                else:
-                    inverse = False
+                        inverse = False
 
-                # Is the word a single character?  if it is, when we will need to
-                # add spaces around it.
-                if len(word) == 1:
-                    word = ' %s ' % word
+                    # Is the word a single character?  if it is, when we will need to
+                    # add spaces around it.
+                    if len(word) == 1:
+                        word = ' %s ' % word
 
-                if inverse:
-                    a = a.filter(not_(Auction.name.contains(word[1:])))
-                else:
-                    a = a.filter(Auction.name.contains(word))
+                    if inverse:
+                        a = a.filter(not_(Auction.name.contains(word[1:])))
+                    else:
+                        a = a.filter(Auction.name.contains(word))
+            if site:
+                a.filter_by(site=site)
         auctions = a.order_by(Auction.close).all()
 
         if auctions:
