@@ -45,6 +45,11 @@ def search(search_string=None):
                             a = a.filter(Auction.type != value[1:])
                         else:
                             a = a.filter(Auction.type == value)
+                    if name.lower() == 'site':
+                        if value[0] == '-':
+                            a = a.filter(Auction.site != value[1:])
+                        else:
+                            a = a.filter(Auction.site == value)
                 else:
                     # is this a negative filter?
                     if word[0] == '-':
