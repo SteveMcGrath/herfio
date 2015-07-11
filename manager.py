@@ -36,6 +36,10 @@ def update():
     for parser in parsers:
         parsers[parser].run()
 
+@manager.command
+def parser(name):
+    parsers[name].run()
+
 # This should almost never need to be run.  As it will surely piss off the
 # auction sites, it's commented out unless really needed.
 #@manager.command
