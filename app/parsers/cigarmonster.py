@@ -12,7 +12,7 @@ class Parser(object):
         resp = requests.get(url, **kwargs)
         return BeautifulSoup(resp.content)
 
-    def item_parse(self, item_id, price, page=None):
+    def item_parse(self, item_id, price, itype, page=None):
         '''
         Parses the CigarMonster AJAX API output
         '''
@@ -82,7 +82,7 @@ class Parser(object):
                     attrs['shape'] == 'assorted'):
                     auction.type = 'sampler'
 
-                if today > mtime and today < ntime:
+                if itype == 'mashup':
                     auction.close = hrtime + timedelta(hours=12)
                 else:
                     auction.close = hrtime + timedelta(hours=1)
