@@ -49,6 +49,7 @@ class Parser(object):
             # a cigar item and we will want to ignore it.
             if 'quantity' in attrs:
                 auction = Auction()
+                auction.aid = item_id
                 auction.timestamp = datetime.now()
                 auction.link = 'http://www.cigarmonster.com'
                 auction.site = 'cigarmonster'
@@ -82,7 +83,7 @@ class Parser(object):
                     auction.type = 'sampler'
 
                 if today > mtime and today < ntime:
-                    auction.close = ntime
+                    auction.close = hrtime + timedelta(hours=12)
                 else:
                     auction.close = hrtime + timedelta(hours=1)
                 logging.info('CigarMonster - ADDING %s' % auction.name)
@@ -90,16 +91,28 @@ class Parser(object):
                 db.session.commit()
 
     def run(self):
+        raid = re.compile(r'\d+')
         page = self.get_page('http://www.cigarmonster.com')
+
+        # If this is a Mashup, then we will need to parse through each item...
         for item in page.findAll('a', {'class': 'mashupItem'}):
             price = float(item.findNext('span', {'class': 'mashupitemprice'}).contents[0].strip('$'))
-            self.item_parse(item.get('name'), price=price)
+            self.item_parse(item.get('name'), price=price, itype='mashup')
+
+        # if this is an individual deal, then we will have to handle the page
+        # a little different;y, as there is only one item, and as such, the
+        # format is different.
         if page.find('div', {'class': 'monsterdealcurrent'}):
             price = float(page.find('span', {'itemprop': 'price'}).text.strip('$'))
-            self.item_parse(0, price=price, page=page)
+            aid = raid.findall(page.find('img', {'id': 'skupic'}).get('onclick'))[0]
+            self.item_parse(aid, price=price, page=page, itype='individual')
+
+        # a little cleanup action here to make sure that all of the deals that
+        # have expired are actually closed.
         stmt = db.update(Auction)\
                       .where(Auction.site == 'cigarmonster')\
                       .where(Auction.close < datetime.now())\
                       .where(Auction.finished == False)\
                       .values(finished=True)
         db.engine.execute(stmt)
+
