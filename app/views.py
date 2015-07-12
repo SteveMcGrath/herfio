@@ -20,7 +20,7 @@ def search(search_string=None):
     form = SearchForm()
     full_search = request.args.get('full_search')
     site = request.args.get('site')
-    print full_search, site
+    category = request.args.get('category')
     auctions = None
     stats = {'display': False}
     
@@ -41,15 +41,9 @@ def search(search_string=None):
                 if '=' in word:
                     name, value = word.split('=')
                     if name.lower() == 'category':
-                        if value[0] == '-':
-                            a = a.filter(Auction.type != value[1:])
-                        else:
-                            a = a.filter(Auction.type == value)
+                        category = value
                     if name.lower() == 'site':
-                        if value[0] == '-':
-                            a = a.filter(Auction.site != value[1:])
-                        else:
-                            a = a.filter(Auction.site == value)
+                        site = value
                 else:
                     # is this a negative filter?
                     if word[0] == '-':
@@ -66,15 +60,27 @@ def search(search_string=None):
                         a = a.filter(not_(Auction.name.contains(word[1:])))
                     else:
                         a = a.filter(Auction.name.contains(word))
-            if site:
-                a.filter_by(site=site)
+
+        # now we have a unified way of handling parameters.
+        if site:
+            for i in site.split(','):
+                if i[0] == '-':
+                    a.filter(Auction.site != i[1:])
+                else:
+                    a.filter(Auction.site = i)
+        if category:
+            for i in category.split(','):
+                if i[0] == '-':
+                    a.filter(Auction.type != i[1:])
+                else:
+                    a.filter(Auction.type = i)                
         auctions = a.order_by(Auction.close).all()
 
         if auctions:
             # First we are going to pull out the subset of the data that we will
-            # be using.  We dont want to have any Null values (which would
+            # be using.  We don't want to have any Null values (which would
             # indicate that the auction never sold for anything) and we don't
-            # want to have samplers in our dataset either (as they are a veriety
+            # want to have samplers in our dataset either (as they are a variety
             # if sticks and the prices won't jive with the data).
             pa = []
             trend = []
