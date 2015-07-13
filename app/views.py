@@ -67,13 +67,13 @@ def search(search_string=None):
                 if i[0] == '-':
                     a.filter(Auction.site != i[1:])
                 else:
-                    a.filter(Auction.site = i)
+                    a.filter(Auction.site == i)
         if category:
             for i in category.split(','):
                 if i[0] == '-':
                     a.filter(Auction.type != i[1:])
                 else:
-                    a.filter(Auction.type = i)                
+                    a.filter(Auction.type == i)                
         auctions = a.order_by(Auction.close).all()
 
         if auctions:
