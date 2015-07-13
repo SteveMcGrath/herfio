@@ -63,17 +63,9 @@ def search(search_string=None):
 
         # now we have a unified way of handling parameters.
         if site:
-            for i in site.split(','):
-                if i[0] == '-':
-                    a = a.filter(Auction.site != str(i[1:]))
-                else:
-                    a = a.filter(Auction.site == str(i))
+            a = a.filter(Auction.site.in_(site.split(',')))
         if category:
-            for i in category.split(','):
-                if i[0] == '-':
-                    a = a.filter(Auction.type != str(i[1:]))
-                else:
-                    a = a.filter(Auction.type == str(i))                
+            a = a.filter(Auction.site.in_(category.split(',')))              
         auctions = a.order_by(Auction.close).all()
 
         if auctions:
