@@ -65,15 +65,15 @@ def search(search_string=None):
         if site:
             for i in site.split(','):
                 if i[0] == '-':
-                    a.filter(Auction.site != i[1:])
+                    a = a.filter(Auction.site != str(i[1:]))
                 else:
-                    a.filter(Auction.site == i)
+                    a = a.filter(Auction.site == str(i))
         if category:
             for i in category.split(','):
                 if i[0] == '-':
-                    a.filter(Auction.type != i[1:])
+                    a = a.filter(Auction.type != str(i[1:]))
                 else:
-                    a.filter(Auction.type == i)                
+                    a = a.filter(Auction.type == str(i))                
         auctions = a.order_by(Auction.close).all()
 
         if auctions:
