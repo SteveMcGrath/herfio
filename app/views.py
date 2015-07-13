@@ -65,7 +65,7 @@ def search(search_string=None):
         if site:
             a = a.filter(Auction.site.in_(site.split(',')))
         if category:
-            a = a.filter(Auction.site.in_(category.split(',')))              
+            a = a.filter(Auction.type.in_(category.split(',')))              
         auctions = a.order_by(Auction.close).all()
 
         if auctions:
