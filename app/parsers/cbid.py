@@ -72,7 +72,10 @@ class Parser(object):
                     # Singles should always be a quantity of 1.
                     auction.quantity = 1
                     auction.type = 'single'
-                #elif category in ['Specials', 'Samplers', 'Quick-ies']:
+                elif category == 'Sampler':
+                    auction.quantity = 1
+                    auction.type = 'sampler'
+                
                 if not auction.quantity:
                     # These 3 categories are some genetal catch-all categories
                     # and we need to handle the information in a more generic
