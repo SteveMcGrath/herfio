@@ -91,6 +91,8 @@ class Parser(object):
                         if len(matches) > 0:
                             auction.type = '%s-pack' % matches[0]
                             auction.quantity = int(matches[0])
+                    elif 'sampler' in title.lower():
+                        auction.type = 'sampler'
                     elif '5 cigars' in title.lower():
                         auction.type = '5-pack'
                         auction.quantity = 5
@@ -111,8 +113,6 @@ class Parser(object):
                     elif 'single' in title.lower():
                         auction.type = 'single'
                         auction.quantity = 1
-                    elif 'sampler' in title.lower():
-                        auction.type = 'sampler'
                     else:
                         matches = re.findall(r'(\w+) of (\d{1,3})', title.lower())
                         if len(matches) > 0:
