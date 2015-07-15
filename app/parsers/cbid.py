@@ -93,6 +93,7 @@ class Parser(object):
                             auction.quantity = int(matches[0])
                     elif 'sampler' in title.lower():
                         auction.type = 'sampler'
+                        auction.quantity = 1
                     elif '5 cigars' in title.lower():
                         auction.type = '5-pack'
                         auction.quantity = 5
