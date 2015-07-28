@@ -37,6 +37,9 @@ class Parser(object):
             'magnum', 'maestro', 'brillantes', 'series \'a\'', 'imperial',
             'box-press', 'gigante', 'shorty', 
         ]
+        excludes = [
+            'lighter', 'ashtray', 'humidor', 'pipe',
+        ]
         aid = item.findChild('td', {'class': 'cb_wcb cb_colsm'}).findNext('span').get('data-id')
         auction = Auction.query.filter_by(aid=aid, site='cbid').first()
 
@@ -94,7 +97,7 @@ class Parser(object):
                         if len(matches) > 0:
                             auction.type = '%s-pack' % matches[0]
                             auction.quantity = int(matches[0])
-                    elif 'sampler' in title.lower():
+                    elif 'sampler' in title.lower() or 'gift' in title.lower():
                         auction.type = 'sampler'
                         auction.quantity = 1
                     elif '5 cigars' in title.lower():
@@ -133,6 +136,14 @@ class Parser(object):
                             # then we will consider it a single.
                             if keyword in title.lower():
                                 auction.quantity = 1
+                                auction.type = 'single'
+                        for keyword in excludes:
+                            # This set of keywords will reverse the keyword match.
+                            # This should stop things like ashtrays and lighters
+                            # from working their way into the database.
+                            if keyword in title.lower():
+                                auction.quantity = None 
+                                auction.type = None
                 if not auction.quantity:
                     # Well none of the above options matched, so this doesn't
                     # appear to be a Cigar listing.  Lets abort, throw a pretty
