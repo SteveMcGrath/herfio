@@ -80,7 +80,8 @@ def search(search_string=None):
             heat = {}
             for auction in auctions:
                 if (auction.price_per_stick is not None 
-                     and auction.finished 
+                     and auction.finished
+                     and auction.type
                      and (auction.type != 'sampler' or 'sampler' in category.split(','))):
                     pa.append(auction)
                     trend.append([mktime(auction.close.timetuple()) * 1000, float(auction.price_per_stick)])
