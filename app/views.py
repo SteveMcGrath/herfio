@@ -122,7 +122,8 @@ def search(search_string=None):
         return jsonify(
             auctions=[a.serialize() for a in auctions],
             stats=stats,
-            search_string=search_string
+            search_string=search_string,
+            totals=totals,
         )
     else:        
         return render_template('search.html',
@@ -130,4 +131,5 @@ def search(search_string=None):
             form=form,
             stats=stats,
             search_string=search_string,
+            totals=totals,
         )
