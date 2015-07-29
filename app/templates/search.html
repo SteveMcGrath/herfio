@@ -3,14 +3,7 @@
 {% set field = request.args.get('sort') or 'close' %}
 {% set direction = request.args.get('reversed')|int(default=1) %}
 
-{% block totals %}
-<div>
-    Open: {{ totals['open'] }} / Archived: {{ totals['closed'] }}
-</div>
-{% endblock %}
-
 {% block content %}
-
 {% if not auctions %}
 <div class="container">
     <div class="jumbotron">
@@ -25,6 +18,7 @@
                 </span>
             </div>
         </form>
+        Open Auctions: {{ totals['open'] }} / Archived Auctions: {{ totals['closed'] }}
         {% if search_string %}
         <p>no results for <strong>{{ search_string }}</strong> found.</p>
         {% endif %}

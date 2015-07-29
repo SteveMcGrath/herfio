@@ -23,17 +23,19 @@ def search(search_string=None):
     category = request.args.get('category')
     auctions = None
     stats = {'display': False}
-    totals = {
-        'open': Auction.query.filter_by(finished = False).count(),
-        'closed': Auction.query.filter_by(finished = True).count()
-    }
-
+    totals = {}
     
     if form.validate_on_submit():
         return redirect('/search/%s' % form.search.data.replace(' ', '_'))
 
     if search_string == '':
         search_string = None
+
+    if not search_string and request.mimetype != 'application/json':
+        totals = {
+            'open': Auction.query.filter_by(finished = False).count(),
+            'closed': Auction.query.filter_by(finished = True).count()
+        }
 
     if search_string or full_search:
         if full_search:
@@ -123,7 +125,6 @@ def search(search_string=None):
             auctions=[a.serialize() for a in auctions],
             stats=stats,
             search_string=search_string,
-            totals=totals,
         )
     else:        
         return render_template('search.html',
