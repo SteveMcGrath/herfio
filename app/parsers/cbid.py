@@ -16,12 +16,25 @@ class Parser(object):
 
     def timestamp_gen(self, text):
         '''Generates a datetime object off of the "time left" component'''
-        try:
-            t = re.findall(r'(\d{1,3})h (\d{1,2})m', text)
-            return datetime.now() + timedelta(hours=int(t[0][0]), minutes=int(t[0][1]))
-        except IndexError:
-            t = re.findall(r'(\d{1,2})m (\d{1,2})s', text)
-            return datetime.now() + timedelta(minutes=int(t[0][0]), seconds=int(t[0][1]))
+        time = {
+            'days': re.findall(r'(\d{1,3})d', text),
+            'hours': re.findall(r'(\d{1,3})h', text),
+            'minutes': re.findall(r'(\d{1,2})m', text),
+            'seconds': re.findall(r'(\d{1,2})s', text),
+        }
+
+        for item in time:
+            if len(time[item]) > 0:
+                time[item] = int(time[item][0])
+            else:
+                time[item] = 0
+
+        return datetime.now() + timedelta(
+            days=time['days'],
+            hours=time['hours'],
+            minutes=time['minutes'],
+            seconds=time['seconds']
+        )
 
     def parse_item(self, item):
         '''
