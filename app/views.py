@@ -23,6 +23,11 @@ def search(search_string=None):
     category = request.args.get('category')
     auctions = None
     stats = {'display': False}
+    totals = {
+        'open': Auction.query.filter_by(finished = False).count(),
+        'closed': Auction.query.filter_by(finished = True).count()
+    }
+
     
     if form.validate_on_submit():
         return redirect('/search/%s' % form.search.data.replace(' ', '_'))

@@ -3,6 +3,12 @@
 {% set field = request.args.get('sort') or 'close' %}
 {% set direction = request.args.get('reversed')|int(default=1) %}
 
+{% block totals %}
+<div>
+    Open: {{ totals['open'] }} / Archived: {{ totals['closed'] }}
+</div>
+{% endblock %}
+
 {% block content %}
 
 {% if not auctions %}
@@ -250,6 +256,11 @@
                     ],
                     hoverable: true,
                     autoHighlight: true,
+                },
+                tooltip: {
+                    show: true,
+                    content: "Price: %x; Count: %y"
+
                 }
             });
         });
