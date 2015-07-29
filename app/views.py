@@ -68,6 +68,9 @@ def search(search_string=None):
             a = a.filter(Auction.type.in_(category.split(',')))              
         auctions = a.order_by(Auction.close).all()
 
+        if not category:
+            category = ''
+
         if auctions:
             # First we are going to pull out the subset of the data that we will
             # be using.  We don't want to have any Null values (which would
