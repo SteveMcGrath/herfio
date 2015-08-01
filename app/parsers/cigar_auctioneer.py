@@ -128,7 +128,11 @@ class Parser(object):
             # one last time.
             logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             page = self.get_page(auction.link)
-            auction.price = self.get_final_price(page)
-            auction.finished = True
-            auction.timestamp = datetime.now()
-            db.session.commit()
+            try:
+                auction.price = self.get_final_price(page)
+            except AttributeError:
+                print 'Failed to close: %s %s' % (auction.id,auction.page)
+            else:
+                auction.finished = True
+                auction.timestamp = datetime.now()
+                db.session.commit()
