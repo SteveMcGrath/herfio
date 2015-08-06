@@ -89,7 +89,10 @@ class Parser(object):
 
     def get_final_price(self, page):
         '''Attempts to get the final price of the cigars.'''
-        a_type = page.find('div', text='Auction Type:').findNext('img').get('class').split()
+        try:
+            a_type = page.find('div', text='Auction Type:').findNext('img').get('class').split()
+        except AttributeError:
+            return None
         if 'spicon_english' in a_type:
             # In a regular auction, the high bidder wins.  In this case its
             # simply a matter of pulling the high bid and converting it into a
@@ -128,11 +131,9 @@ class Parser(object):
             # one last time.
             logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             page = self.get_page(auction.link)
-            try:
-                auction.price = self.get_final_price(page)
-            except AttributeError:
-                print 'Failed to close: %s %s' % (auction.id,auction.page)
-            else:
+            price = self.get_final_price(page)
+            if price:
+                auction.price = price
                 auction.finished = True
                 auction.timestamp = datetime.now()
                 db.session.commit()
