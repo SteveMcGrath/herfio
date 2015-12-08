@@ -100,6 +100,7 @@ class Parser(object):
             try:
                 return float(page.find(attrs={'id': 'highbid'}).text.strip('$'))
             except:
+                logging.debug('English Auction Issue!')
                 return None
         if 'spicon_yankee' in a_type:
             # In this case we are dealing with a yankee auction.  As there are
@@ -107,6 +108,7 @@ class Parser(object):
             try:
                 return float(page.find(attrs={'id': 'highbidder'}).findNext('span').text.strip('$'))
             except:
+                logging.debug('Yankee Auction Issue!')
                 return None
 
     def run(self, finish_state=False, get_new_listings=True):
@@ -129,7 +131,6 @@ class Parser(object):
             # the closed price for the auction, tagging the auction as finished
             # (so that we know not to finalize again), and update the timestamp
             # one last time.
-            logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             try:
                 page = self.get_page(auction.link)
                 price = self.get_final_price(page)
@@ -138,6 +139,7 @@ class Parser(object):
                     auction.finished = True
                     auction.timestamp = datetime.now()
                     db.session.commit()
+                logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             except requests.exceptions.ConnectionError:
                 logging.debug('CLOSING FAILED for %s:%s' % (auction.aid, auction.name))
 
