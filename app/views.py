@@ -24,7 +24,7 @@ def search(search_string=None):
     auctions = None
     stats = {'display': False}
     totals = {}
-    
+
     if form.validate_on_submit():
         return redirect('/search/%s' % form.search.data.replace(' ', '_'))
 
@@ -72,7 +72,8 @@ def search(search_string=None):
         if site:
             a = a.filter(Auction.site.in_(site.split(',')))
         if category:
-            a = a.filter(Auction.type.in_(category.split(',')))              
+            a = a.filter(Auction.type.in_(category.split(',')))
+        a = a.filter(Auction.price != None)
         auctions = a.order_by(Auction.close).all()
 
         if not category:
@@ -89,7 +90,7 @@ def search(search_string=None):
             prices = []
             heat = {}
             for auction in auctions:
-                if (auction.price_per_stick is not None 
+                if (auction.price_per_stick is not None
                      and auction.finished
                      and auction.type
                      and (auction.type != 'sampler' or 'sampler' in category.split(','))):
@@ -126,7 +127,7 @@ def search(search_string=None):
             stats=stats,
             search_string=search_string,
         )
-    else:        
+    else:
         return render_template('search.html',
             auctions=auctions,
             form=form,
