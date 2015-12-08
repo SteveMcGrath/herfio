@@ -24,7 +24,7 @@ def list_routes():
         url = url_for(rule.endpoint, **options)
         line = urllib.unquote("{:50s} {:20s} {}".format(rule.endpoint, methods, url))
         output.append(line)
-    
+
     for line in sorted(output):
         print line
 
@@ -39,6 +39,10 @@ def update():
 @manager.command
 def parser(name):
     parsers[name].run()
+
+@manager.command
+def close(name, state=0):
+    parsers[name].close_auctions(bool(state))
 
 # This should almost never need to be run.  As it will surely piss off the
 # auction sites, it's commented out unless really needed.
