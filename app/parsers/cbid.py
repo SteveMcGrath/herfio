@@ -190,7 +190,7 @@ class Parser(object):
         else:
             return max(prices)
 
-    def close_acutions(self, finish_state=False):
+    def close_auctions(self, finish_state=False):
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
                                     .filter(Auction.finished == finish_state)\
                                     .filter(Auction.site == 'cbid').all():
