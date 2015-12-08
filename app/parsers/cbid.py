@@ -184,11 +184,20 @@ class Parser(object):
     def get_final_price(self, page, use_avg=True):
         '''Attempts to get the final price of the cigars.'''
         bids = page.findAll('td', {'class': 'lot_winning_bid'})
-        prices = [float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0]) for bid in bids]
-        if use_avg:
-            return sum(prices) / len(prices)
+        try:
+            prices = []
+            for bid in bids:
+                if 'QB' not in bid.text:
+                    prices.append(float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0]))
+        except IndexError:
+            return None
+        if len(prices) > 0:
+            if use_avg:
+                return sum(prices) / len(prices)
+            else:
+                return max(prices)
         else:
-            return max(prices)
+            return None
 
     def close_auctions(self, finish_state=False):
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
