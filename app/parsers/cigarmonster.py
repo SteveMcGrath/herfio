@@ -9,8 +9,12 @@ import requests, re
 class Parser(object):
     def get_page(self, url, **kwargs):
         '''returns with a BeautifulSoup object of the URL specified.'''
-        resp = requests.get(url, **kwargs)
-        return BeautifulSoup(resp.content)
+        try:
+            resp = requests.get(url, **kwargs)
+            return BeautifulSoup(resp.content)
+        except requests.exceptions.ConnectionError:
+            logging.warn('Could not get page: %s' % url)
+            return None
 
     def item_parse(self, item_id, price, itype, page=None):
         '''

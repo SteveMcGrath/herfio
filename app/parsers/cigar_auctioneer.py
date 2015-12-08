@@ -130,10 +130,14 @@ class Parser(object):
             # (so that we know not to finalize again), and update the timestamp
             # one last time.
             logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
-            page = self.get_page(auction.link)
-            price = self.get_final_price(page)
-            if price:
-                auction.price = price
-                auction.finished = True
-                auction.timestamp = datetime.now()
-                db.session.commit()
+            try:
+                page = self.get_page(auction.link)
+                price = self.get_final_price(page)
+                if price:
+                    auction.price = price
+                    auction.finished = True
+                    auction.timestamp = datetime.now()
+                    db.session.commit()
+            except requests.exceptions.ConnectionError:
+                logging.debug('CLOSING FAILED for %s:%s' % (auction.aid, auction.name)))
+
