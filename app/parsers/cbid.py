@@ -181,18 +181,14 @@ class Parser(object):
         # Now we need to commit the changes to the database ;)
         db.session.commit()
 
-    def get_final_price(self, page):
+    def get_final_price(self, page, use_avg=True):
         '''Attempts to get the final price of the cigars.'''
         bids = page.findAll('td', {'class': 'lot_winning_bid'})
-        high = 0.0
-        for bid in bids:
-            try:
-                nbid = float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0])
-                if nbid > high:
-                    high = nbid
-            except IndexError:
-                pass
-        return high
+        prices = [float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0]) for bid in bids]
+        if use_avg:
+            return sum(prices) / len(prices)
+        else:
+            return max(prices)
 
     def close_acutions(self, finish_state=False):
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
