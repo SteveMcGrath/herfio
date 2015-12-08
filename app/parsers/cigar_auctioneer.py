@@ -90,8 +90,8 @@ class Parser(object):
     def get_final_price(self, page):
         '''Attempts to get the final price of the cigars.'''
         if page.find(text=re.compile('no bids on this auction')):
-            return 'no bids'
             logging.debug('No Bids!')
+            return 'no bids'
         try:
             a_type = page.find('div', text='Auction Type:').findNext('img').get('class').split()
         except AttributeError:
