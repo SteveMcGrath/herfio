@@ -48,7 +48,7 @@ class Parser(object):
             'toro', 'robusto', 'belicoso', 'connecticut', 'maduro', 'churchill',
             'torpedo', 'corona', 'single', 'lonsdale', 'corojo', 'sumatra',
             'magnum', 'maestro', 'brillantes', 'series \'a\'', 'imperial',
-            'box-press', 'gigante', 'shorty', 
+            'box-press', 'gigante', 'shorty',
         ]
         excludes = [
             'lighter', 'ashtray', 'humidor', 'pipe',
@@ -91,7 +91,7 @@ class Parser(object):
                 elif category == 'Sampler':
                     auction.quantity = 1
                     auction.type = 'sampler'
-                
+
                 if not auction.quantity:
                     # These 3 categories are some genetal catch-all categories
                     # and we need to handle the information in a more generic
@@ -124,8 +124,8 @@ class Parser(object):
                         auction.quantity = 5
                     elif 'pack of 10' in title.lower():
                         auction.type = '10-pack'
-                        auction.quantity = 10                    
-                    elif ' cigars' in title.lower(): 
+                        auction.quantity = 10
+                    elif ' cigars' in title.lower():
                         matches = re.findall(r'(\d{1,3})[ -]cigars', title.lower())
                         if len(matches) > 0:
                             auction.type = 'bundle'
@@ -155,7 +155,7 @@ class Parser(object):
                             # This should stop things like ashtrays and lighters
                             # from working their way into the database.
                             if keyword in title.lower():
-                                auction.quantity = None 
+                                auction.quantity = None
                                 auction.type = None
                 if not auction.quantity:
                     # Well none of the above options matched, so this doesn't
@@ -188,26 +188,13 @@ class Parser(object):
         for bid in bids:
             try:
                 nbid = float(re.findall(r'\$(\d{1,4}\.\d{2})', bid.text)[0])
-                if nbid > high: 
+                if nbid > high:
                     high = nbid
             except IndexError:
                 pass
         return high
 
-    def run(self, finish_state=False, get_new_listings=True):
-        '''Primary loop'''
-        # Here we will be interating through the different URLs defined in
-        # the objects and will be handing the individual entries off to the
-        # parse_item function for handling.
-        if get_new_listings:
-            page = self.get_page(self.url)
-            items = page.find('div', attrs={'class': 'cb_product_listing'}).findChildren('tr')[2:]
-            for item in items:
-                self.parse_item(item)
-
-        # Commit all of the updates and new items
-        #db.session.commit()
-
+    def close_acutions(self, finish_state=False):
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
                                     .filter(Auction.finished == finish_state)\
                                     .filter(Auction.site == 'cbid').all():
@@ -222,3 +209,18 @@ class Parser(object):
             auction.finished = True
             auction.timestamp = datetime.now()
             db.session.commit()
+
+    def run(self, finish_state=False, get_new_listings=True):
+        '''Primary loop'''
+        # Here we will be interating through the different URLs defined in
+        # the objects and will be handing the individual entries off to the
+        # parse_item function for handling.
+        if get_new_listings:
+            page = self.get_page(self.url)
+            items = page.find('div', attrs={'class': 'cb_product_listing'}).findChildren('tr')[2:]
+            for item in items:
+                self.parse_item(item)
+
+        # Commit all of the updates and new items
+        #db.session.commit()
+        self.close_auctions(finish_state)

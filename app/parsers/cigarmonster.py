@@ -33,7 +33,7 @@ class Parser(object):
                                .filter(Auction.site == 'cigarmonster')\
                                .filter(Auction.close >= today).first()
         if not auction:
-            # As there is nothing in the database, we will check to see if we 
+            # As there is nothing in the database, we will check to see if we
             # need to create a new entry for this deal.  CigarMonster uses an
             # AJAX popin to display the details.  We will be using that to get
             # a consistant point of information.
@@ -69,8 +69,8 @@ class Parser(object):
 
                 # Next we will need to get the price.
                 auction.price = price
-                
-                # As not all of the CigarMonster auctions have a shape in the 
+
+                # As not all of the CigarMonster auctions have a shape in the
                 # name of the auction, we will want to add this for searching
                 # purposes.  We will append (SHAPE) to the end of the deal name.
                 if page.find('div', {'class': 'mashupitempopdes'}):
@@ -78,11 +78,11 @@ class Parser(object):
                 else:
                     name = page.find('h2', {'class': 'monsteritemdes'}).text
                 auction.name = name + ' (%s)' % attrs['shape']
-                
+
                 # So if we see any indications that this is a sampler, then we
                 # should re-type it to be as such.
-                if ('sampler' in auction.name or 
-                    attrs['size'] == 'varies' or 
+                if ('sampler' in auction.name or
+                    attrs['size'] == 'varies' or
                     attrs['shape'] == 'assorted'):
                     auction.type = 'sampler'
 
@@ -93,6 +93,9 @@ class Parser(object):
                 logging.info('CigarMonster - ADDING %s' % auction.name)
                 db.session.add(auction)
                 db.session.commit()
+
+    def close_auctions(self):
+        pass
 
     def run(self):
         raid = re.compile(r'\d+')

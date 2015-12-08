@@ -89,6 +89,9 @@ class Parser(object):
 
     def get_final_price(self, page):
         '''Attempts to get the final price of the cigars.'''
+        if page.find(text=re.compile('no bids on this auction')):
+            return 'no bids'
+            logging.debug('No Bids!')
         try:
             a_type = page.find('div', text='Auction Type:').findNext('img').get('class').split()
         except AttributeError:
@@ -111,18 +114,7 @@ class Parser(object):
                 logging.debug('Yankee Auction Issue!')
                 return None
 
-    def run(self, finish_state=False, get_new_listings=True):
-        '''Primary loop'''
-        if get_new_listings:
-            for url in self.urls:
-                # Here we will be interating through the different URLs defined in
-                # the objects and will be handing the individual entries off to the
-                # parse_item function for handling.
-                page = self.get_page(self.urls[url])
-                items = page.findAll('div', attrs={'itemtype': 'http://schema.org/Product'})
-                for item in items:
-                    self.parse_item(item, items.index(item) + 1, url)
-
+    def close_auctions(self, finish_state=False):
         for auction in Auction.query.filter(Auction.close <= datetime.now())\
                                     .filter(Auction.finished == finish_state)\
                                     .filter(Auction.site == 'cigarauctioneer').all():
@@ -134,7 +126,12 @@ class Parser(object):
             try:
                 page = self.get_page(auction.link)
                 price = self.get_final_price(page)
-                if price:
+                if price == 'no bids':
+                    auction.price = None
+                    auction.finished = True
+                    auction.timestamp = datetime.now()
+                    db.session.commit()
+                elif price:
                     auction.price = price
                     auction.finished = True
                     auction.timestamp = datetime.now()
@@ -142,4 +139,17 @@ class Parser(object):
                 logging.debug('CLOSING %s:%s' % (auction.aid, auction.name))
             except requests.exceptions.ConnectionError:
                 logging.debug('CLOSING FAILED for %s:%s' % (auction.aid, auction.name))
+
+    def run(self, finish_state=False, get_new_listings=True):
+        '''Primary loop'''
+        if get_new_listings:
+            for url in self.urls:
+                # Here we will be interating through the different URLs defined in
+                # the objects and will be handing the individual entries off to the
+                # parse_item function for handling.
+                page = self.get_page(self.urls[url])
+                items = page.findAll('div', attrs={'itemtype': 'http://schema.org/Product'})
+                for item in items:
+                    self.parse_item(item, items.index(item) + 1, url)
+        self.close_auctions(finish_state)
 
