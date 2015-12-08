@@ -139,5 +139,5 @@ class Parser(object):
                     auction.timestamp = datetime.now()
                     db.session.commit()
             except requests.exceptions.ConnectionError:
-                logging.debug('CLOSING FAILED for %s:%s' % (auction.aid, auction.name)))
+                logging.debug('CLOSING FAILED for %s:%s' % (auction.aid, auction.name))
 
