@@ -88,7 +88,7 @@ class Parser(object):
                     # Singles should always be a quantity of 1.
                     auction.quantity = 1
                     auction.type = 'single'
-                elif category == 'Sampler':
+                elif category == 'Samplers':
                     auction.quantity = 1
                     auction.type = 'sampler'
 
