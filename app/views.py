@@ -93,7 +93,7 @@ def search(search_string=None):
                 if (auction.price_per_stick is not None
                      and auction.finished
                      and auction.type
-                     and (auction.type != 'sampler' or 'sampler' in category.split(','))):
+                     and (auction.type != 'sampler' or 'sampler' in category.split(',') or full_search)):
                     pa.append(auction)
                     trend.append([mktime(auction.close.timetuple()) * 1000, float(auction.price_per_stick)])
                     prices.append(auction.price_per_stick)
