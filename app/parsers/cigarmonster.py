@@ -46,8 +46,11 @@ class Parser(object):
             attrs = {}
             for a in page.findAll('div', {'class': 'detail-l'}):
                 name = a.text.lower().strip(':')
-                value = a.findNext('div', {'class': 'detail-r'}).text.lower()
-                attrs[name] = value
+                try:
+                    value = a.findNext('div', {'class': 'detail-r'}).text.lower()
+                    attrs[name] = value
+                except AttributeError:
+                    print 'Failed to get Attribute %s on item %s ' % (name, item_id)
 
             # If there is no quantity in the popin, then this isn't specifically
             # a cigar item and we will want to ignore it.
