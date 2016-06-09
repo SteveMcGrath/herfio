@@ -172,20 +172,15 @@
         </div>
     </div>
     <div class="container" id="history">
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
             <thead>
                 <td>Title</td><td>Category</td><td>Closed</td><td></td><td>Price</td>
             </thead>
             <tbody>
                 {% for item in auctions|sort(attribute=field, reverse=direction) %}{% if item.price and item.finished %}
-                <tr>
+                <tr onclick="location.href='{{ item.link }}'">
                     <td>
                         {{ item.name}}
-                        <span class="pull-right">
-                            <a class="btn btn-info btn-xs" href="{{ item.link }}">
-                                <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>
-                            </a>
-                        </span>
                     </td>
                     <td>
                         {{ item.type }}
