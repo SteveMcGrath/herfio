@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 from app.models import Auction, Brand
 from app.extensions import db
 from . import logging
-import requests, re
+import requests, re, warnings
+warnings.filterwarnings('ignore', 'Data truncated .*')
 
 
 class Parser(object):
@@ -50,7 +51,7 @@ class Parser(object):
                     value = a.findNext('div', {'class': 'detail-r'}).text.lower()
                     attrs[name] = value
                 except AttributeError:
-                    print 'Failed to get Attribute %s on item %s ' % (name, item_id)
+                    #print 'Failed to get Attribute %s on item %s ' % (name, item_id)
 
             # If there is no quantity in the popin, then this isn't specifically
             # a cigar item and we will want to ignore it.

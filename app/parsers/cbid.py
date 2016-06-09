@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 from app.models import Auction, Brand
 from app.extensions import db
 from . import logging
-import requests, re
+import requests, re, warnings
+warnings.filterwarnings('ignore', 'Data truncated .*')
 
 
 class Parser(object):
