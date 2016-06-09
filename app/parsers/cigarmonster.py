@@ -51,6 +51,7 @@ class Parser(object):
                     value = a.findNext('div', {'class': 'detail-r'}).text.lower()
                     attrs[name] = value
                 except AttributeError:
+                    pass
                     #print 'Failed to get Attribute %s on item %s ' % (name, item_id)
 
             # If there is no quantity in the popin, then this isn't specifically
