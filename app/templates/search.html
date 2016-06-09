@@ -10,7 +10,11 @@
         <form method="POST" action="/">
             {{ form.hidden_tag() }}
             <div class="input-group">
-                <input id="search" type="text" name="search" class="form-control" placeholder="Search">
+                <input id="search" 
+                    type="text" 
+                    name="search" 
+                    class="form-control" 
+                    placeholder="Search">
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-default">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -39,13 +43,13 @@
             </li>
             <li><strong>Negative searching</strong> - Are you looking for something and the search is just about there,
                 but you want to remove a couple of pesky items?  Well then just prepend a "-" sign to the beginning of
-                the word that you don't want to see.  The "-" sign will tell BidHistory to search for items that <i>don't</i>
-                have that word, allowing you to continue to narrow down your dataset.
+                the word that you don't want to see.  The "-" sign will tell BidHistory to search for items that 
+                <i>don't</i> have that word, allowing you to continue to narrow down your dataset.
             </li>
             <li><strong>Price Per Stick Computation</strong> - BidHistory attempts to normalize all of the different
                 auctions down to a "price per stick" number.  This means that regardless of if its a 5-pack, 10-pack,
-                or a box of 24, you can see what the price you would be paying is on a per cigar level.  All of BidHistory's
-                analytics are leveraging these numbers to try to make this information as useful as possible.
+                or a box of 24, you can see what the price you would be paying is on a per cigar level.  All of 
+                BidHistory's analytics are leveraging these numbers to try to make this information as useful as possible.
             </li>
             <li><strong>Filter by Auction Type</strong> - If you desire to only see 5-packs, simply add
                 <i>"category=5-pack"</i> to the search string.  Multiple items can be selected using a comma, such as:
@@ -84,7 +88,7 @@
                     <li class="list-group-item active">
                         Average Price Per Stick
                         <span class="badge">
-                            {{ '%3.2f' % stats['avg'] }}
+                            <stong>{{ '%3.2f' % stats['avg'] }}</stong>
                         </span>
                     </li>
                     <li class="list-group-item">
@@ -158,7 +162,7 @@
                     </button>
                 </h3>
             </div>
-            <div class="panel-body" id="open-auctions-view" aria-expanded="false">
+            <div class="panel-body collapse" id="open-auctions-view" aria-expanded="false">
                 <table class="table table-striped">
                     <thead>
                         <td>Title</td><td>Category</td><td></td><td>Time Left</td>

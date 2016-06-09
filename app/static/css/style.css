@@ -7,3 +7,8 @@
     width: 100%;
     background-color: #ddd;
 }
+#heatmap-placeholder, #trend-placeholder {
+	height:200px;
+	width: 100%;
+	position: relative;
+}
