@@ -1,0 +1,31 @@
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/static/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/static/css/bootswatch.min.css')
+		link(rel='stylesheet', href='/static/css/style.css')
+		script(src='/socket.io/socket.io.js')
+	body
+		div.navbar.navbar-default.navbar-fixed-top
+			div.container
+				div.navbar.header
+					button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-main')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.navbar-brand(href='/')
+						img(src='/static/img/logo_header.png', alt='Herf.IO')
+				div.#navbar-main.navbar-collapse.collapse
+					ul.nav.navbar-nav
+						li
+							a(href='/bids') BidHistory
+						li
+							a(href='/humidors') HumiTrack
+		div#wrapper.container
+			block content
+	script(src='/static/js/jQuery-1.10.2.min.js')
+	script(src='/static/js/flot.min.js')
+	script(src='/static/js/flot.time.min.js')
+	script(src='/static/js/flot.tooltip.min.js')
+	block script

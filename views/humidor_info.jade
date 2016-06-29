@@ -1,0 +1,15 @@
+extends layout.jade
+
+block content
+	h1= humidor.name
+	ul
+		li= humidor.id
+		li= humidor.name
+		li= humidor.location
+		li= humidor.email
+		ul Temperature Limits
+			li= 'High : ' + humidor.limits.tempurature.high
+			li= 'Low : ' + humidor.limits.tempurature.low
+		ul Humidity Limits
+			li= 'High : ' + humidor.limits.humidity.high
+			li= 'Low : ' + humidor.limits.humidity.low

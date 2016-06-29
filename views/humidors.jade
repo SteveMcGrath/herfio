@@ -1,0 +1,7 @@
+extends layout.jade
+
+block content
+	h1= user.name + '\'s Humidors'
+	div.list-group
+		each val, index in humidors
+			a(href='/humidors/' + val.id).list-group-item= val.name
