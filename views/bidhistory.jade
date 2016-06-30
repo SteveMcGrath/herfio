@@ -1,0 +1,104 @@
+extends layout.jade
+
+block content
+	.well
+		form(method='post', action='/bids/search')
+			.input-group
+				input(id='search', name='search', type='text', placeholder='Search').form-control
+				span.input-group-btn
+					button(type='submit').btn.btn-default
+						span(aria-hidden='true').glyphicon.glyphicon-search
+		p= 'Open Auctions: ' + totalOpen + '/ Archived Auctions: ' + totalAuctions
+	if !auctions
+		.container
+			:markdown
+				## What is BidHistory
+
+				BidHistory is a tool designed to provide some statistics and temporal information 
+				about Cigar auctions across various auction sites.  As BidHistory is early in it's 
+				development, it is not feature complete and may change over time.  We welcome any 
+				input from our users and feel free to file bug reports or feature requests on the 
+				[GitHub Page](http://github/.com/stevemcgrath/bidhistory).
+
+				## How to use the auction search
+
+				As the new Node.js version is significantly different, this will all need to be rewritten...
+	else
+		.container
+			#analytics.container
+				.panel.panel-primary
+					.panel-heading
+						h3.panel-title Price Analysis
+					.panel-body
+						ul.list-group
+							li.list-group-item Best Price per Stick
+								span.badge= stats.best
+							li.list-group-item.active Average Price per Stick
+								span.badge= stats.average
+							li.list-group-item Worst Price per Stick
+								span.badge= stats.worst
+							li.list-group-item Standard Deviation
+								span.badge= stats.stdDev
+						ul.list-group
+							li.list-group-item Great Price Range
+								span.badge= stats.great + ' - ' + stats.good
+							li.list-group-item Good Price Range
+								span.badge= stats.good + ' - ' + stats.average
+							li.list-group-item Poor Price Range
+								span.badge= stats.average + ' - ' + stats.poor
+							li.list-group-item Bad Price Range
+								span.badge= stats.poor + ' - ' + stats.bad
+			#trends.container
+				.panel.panel-primary
+					.panel-heading
+						h3.panel-title Price Distribution
+					.panel-body
+						#price-distribution.container
+				.panel.panel-primary
+					.panel-heading
+						h3.panel-title Price History
+					.panel-body
+						#price-trend.container
+			#current-auctions.container
+				.panel.panel-primary
+					.panel-heading
+						h3.panel-title Current Auctions
+							button(data-toggle='collapse', data-target='#open-auctions-view').btn.btn-info.btn-xs.pull-right
+					#open-auctions-view.panel-body
+						table#open-auctions-table.table.table-striped
+							thead
+								td Title
+								td Category
+								td
+								td Time Left
+							tbody
+								each auction in openAuctions
+									tr(onclick='location.href="' + auction.link + '"')
+										td= auction.name
+										td= auction.type
+											small= '/' + auction.quantity
+										td
+											img(src='/static/img/' + auction.site + '.png')
+										td= auction.closeTime
+			#auction-history.container
+				.panel.panel-primary
+					.panel-heading
+						h3.panel-title Auction History
+					#auction-history-view.panel-body
+						table#auction-history-table.table.table-striped
+							thead
+								td Title
+								td Category
+								td
+								td Closed
+								td Price
+							tbody
+								each auction in closedAuctions
+									tr(onclick='location.href="' + auction.link + '"')
+										td= auction.name
+										td= auction.type
+										td
+											img(src='/static/img/' + auction.site + '.png')
+										td= auction.closeTime
+										td= auction.price
+											small= '/' + auction.pricePerStick
