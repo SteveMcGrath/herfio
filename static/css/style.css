@@ -1,0 +1,12 @@
+#username {
+    position: relative;
+    display: block;
+    padding: 15px;
+    line-height: 20px;
+}
+
+.temp-hum-control {
+	width: 40px;
+}
+
+body { padding-top: 60px; }
