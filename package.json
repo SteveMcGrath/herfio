@@ -24,7 +24,6 @@
   },
   "description": "Herf.io Website",
   "dependencies": {
-    "async": "^2.0.0-rc.6",
     "body-parser": "^1.15.2",
     "config": "^1.21.0",
     "cookie-parser": "^1.4.3",
@@ -37,7 +36,6 @@
     "monk": "^2.1.0",
     "passport": "^0.3.2",
     "passport-reddit": "^0.2.4",
-    "socket.io": "^1.4.8",
     "striptags": "^2.1.1"
   }
 }
