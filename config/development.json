@@ -1,0 +1,9 @@
+{
+	"MongoDB": {
+		"database": "herf.home.cugnet.net:27017/herfio"
+	},
+	"Reddit": {
+		"clientID": "Th_c5jGCz3EbIQ",
+		"clientSecret": "46waig7t2jpo60lbgBM2j_Xab7s"
+	}
+}

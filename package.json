@@ -1,0 +1,42 @@
+{
+  "name": "herfio",
+  "version": "2.0.0",
+  "author": "Steven McGrath <steve@chigeek.com>",
+  "homepage": "https://chigeek.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SteveMcGrath/bidhistory"
+  },
+  "bugs": {
+    "url": "https://github.com/SteveMcGrath/bidhistory/issues"
+  },
+  "keywords": [
+    "cigars",
+    "humidor",
+    "herf"
+  ],
+  "license": "GPL-3.0",
+  "bin": {
+    "herfio": "node ./server.js"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "description": "Herf.io Website",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "config": "^1.21.0",
+    "cookie-parser": "^1.4.3",
+    "emailjs": "^1.0.5",
+    "express": "^4.14.0",
+    "express-logger": "0.0.3",
+    "express-session": "^1.13.0",
+    "fast-stats": "0.0.3",
+    "jade": "^1.11.0",
+    "monk": "^2.1.0",
+    "passport": "^0.3.2",
+    "passport-reddit": "^0.2.4",
+    "striptags": "^2.1.1",
+    "supermarked": "^2.0.0"
+  }
+}

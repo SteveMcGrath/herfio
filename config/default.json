@@ -1,0 +1,23 @@
+{
+	"AppServer": {
+		"port": 3000,
+		"debug": false,
+		"static": "static",
+		"sessionSecret": "sup3r s3kr3t squ1rr3l",
+		"logfile": "access.log"
+	},
+	"MongoDB": {
+		"database": "localhost/herfio"
+	},
+	"Reddit": {
+		"clientID": "ENTER_CLIENT_ID",
+		"clientSecret": "ENTER_CLIENT_SECRET",
+		"callback": "http://127.0.0.1:3000/auth/reddit/callback"
+	},
+	"Email": {
+		"from": "no-reply@herf.io",
+		"server": "localhost",
+		"username": "none",
+		"password": "none"
+	}
+}
