@@ -5,7 +5,6 @@ html
 		link(rel='stylesheet', href='/static/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/static/css/bootswatch.min.css')
 		link(rel='stylesheet', href='/static/css/style.css')
-		script(src='/socket.io/socket.io.js')
 	body
 		.navbar.navbar-default.navbar-fixed-top
 			.container
@@ -31,8 +30,10 @@ html
 							li#username= user.name
 		div#wrapper.container
 			block content
-	script(src='/static/js/jQuery-1.10.2.min.js')
-	script(src='/static/js/flot.min.js')
-	script(src='/static/js/flot.time.min.js')
-	script(src='/static/js/flot.tooltip.min.js')
+	script(src='/static/js/jquery.min.js')
+	script(src='/static/js/jquery.flot.min.js')
+	script(src='/static/js/jquery.flot.time.min.js')
+	script(src='/static/js/jquery.flot.tooltip.min.js')
+	script(src='/static/js/jquery.serialize-object.min.js')
+	script(src='/static/js/herfio.js')
 	block script

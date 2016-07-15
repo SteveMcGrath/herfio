@@ -5,8 +5,37 @@
     line-height: 20px;
 }
 
+#advanced-search {display: none;}
+
+.avg {background-color: #bd84ad;}
+.best {background-color: #2cb39b;}
+.worst {background-color: #ed675b;}
+.great {background-color: #357abd;}
+.good {background-color: #4cae4c;}
+.poor {background-color: #fdc431;}
+.bad {background-color: #ee9336;}
+
 .temp-hum-control {
 	width: 40px;
 }
+
+.tile>.panel-heading {
+    color: #ffffff;
+    border-color: transparent;
+	text-align: center;
+	margin-top: 5px;	
+}
+
+.tile>.panel-body {
+	color: #ffffff;
+}
+
+.price {
+	text-align: center;
+	font-size: xx-large;
+	position: relative;
+}
+
+.big-price {font-size: 60px;}
 
 body { padding-top: 60px; }
