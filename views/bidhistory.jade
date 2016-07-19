@@ -11,6 +11,9 @@ block content
 				span.input-group-btn
 					button(onclick='$(\'#advanced-search\').toggle();return false').btn.btn-info
 						span(area-hidden='true').glyphicon.glyphicon-list
+				span.input-group-btn
+					button(onclick='$(\'#bid-history-help\').toggle();return false').btn.btn-info
+						span(area-hidden='true').glyphicon.glyphicon-question-sign
 			span Open Auctions:
 			span#open-auctions 
 			span &nbsp;&nbsp;Archived Auctions:
@@ -56,20 +59,21 @@ block content
 							label
 								input(type='checkbox', name='types', value='sampler')
 								span &nbsp;Sampler
-	#bid-history-help
-		:markdown
-			## What is BidHistory
+			#bid-history-help
+				hr
+				:markdown
+					## What is BidHistory
 
-			BidHistory is a tool designed to provide some statistics and temporal information 
-			about Cigar auctions across various auction sites.  As BidHistory is early in it's 
-			development, it is not feature complete and may change over time.  We welcome any 
-			input from our users and feel free to file bug reports or feature requests on the 
-			[GitHub Page](http://github/.com/stevemcgrath/bidhistory).
+					BidHistory is a tool designed to provide some statistics and temporal information 
+					about Cigar auctions across various auction sites.  As BidHistory is early in it's 
+					development, it is not feature complete and may change over time.  We welcome any 
+					input from our users and feel free to file bug reports or feature requests on the 
+					[GitHub Page](http://github/.com/stevemcgrath/bidhistory).
 
-			## How to use the auction search
+					## How to use the auction search
 
-			As the new Node.js version is significantly different, this will all need to be rewritten...
-	#bid-history-analytics
+					As the new Node.js version is significantly different, this will all need to be rewritten...
+	div(style='display: none')#bid-history-analytics
 		#price-tiles.row
 			.container.col-lg-4
 				.panel.tile.avg
