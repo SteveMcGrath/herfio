@@ -133,7 +133,7 @@ $('#searchButton').click(function() {
 				price = '<strong>' + item.price.toFixed(2) + '</strong>';
 			}
 			$('#auction-history-table > tbody').append(
-				'<tr onclick="location.href="' + item.link + '">' +
+				'<tr onclick="location.href=' + item.link + '">' +
 				'<td>' + item.name + '</td>' +
 				'<td>' + item.type + '</td>' +
 				'<td><img src="/static/img/' + item.site + '.png"></td>' +
