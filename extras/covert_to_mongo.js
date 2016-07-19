@@ -32,7 +32,7 @@ var queue = async.queue(function (auction, callback) {
 		link: auction.link,
 		state: state,
 		pricePerStick: pps,
-		created: auction.timestamp.getTime(),
+		updated: auction.timestamp.getTime(),
 		closed: auction.close.getTime()
 	}).then(function (doc) {
 		console.log(doc._id + ':' + doc.name)
