@@ -109,13 +109,12 @@ $('#searchButton').click(function() {
 	// Populate the open auctions
 	$.post('/bids/search/open', form, function(rows) {
 		$.each(rows, function(k, item) {
-			console.log(item);
 			$('#open-auctions-table > tbody').append(
 				'<tr onclick="location.href="' + item.link + '">' +
 				'<td>' + item.name + '</td>' +
 				'<td>' + item.type + '</td>' +
 				'<td><img src="/static/img/' + item.site + '.png"></td>' +
-				'<td> TIME LEFT HERE </td>' +
+				'<td>' + moment(item.closed).fromNow() + '</td>' +
 				'</tr>'
 			);
 		});
@@ -125,12 +124,21 @@ $('#searchButton').click(function() {
 	// Populate the open auctions
 	$.post('/bids/search/closed', form, function(rows) {
 		$.each(rows, function(k, item) {
+			var price = null;
+			if (item.type != 'single' && item.price > 0) {
+				price = '<strong>' + item.pricePerStick.toFixed(2) + '</strong>/<small>' + item.price.toFixed(2) + '</small>';
+			} else if (!item.price || item.price == 0) {
+				price = '<small>No Sale</small>';
+			} else {
+				price = '<strong>' + item.price.toFixed(2) + '</strong>';
+			}
 			$('#auction-history-table > tbody').append(
 				'<tr onclick="location.href="' + item.link + '">' +
 				'<td>' + item.name + '</td>' +
 				'<td>' + item.type + '</td>' +
 				'<td><img src="/static/img/' + item.site + '.png"></td>' +
-				'<td> TIME LEFT HERE </td>' +
+				'<td>' + moment(item.closed).fromNow() + '</td>' +
+				'<td>' + price + '</td>' +
 				'</tr>'
 			);
 		});
