@@ -64,7 +64,7 @@ $('#searchButton').click(function() {
 	$('#get-search-link').attr('data-clipboard-text', function() {
 		var directLink = 'https://herf.io/bids?search=' + encodeURIComponent(form.search);
 		if (form.types) {
-			direckLink = direckLink + '&types=' + form.types.join(',');
+			directLink = direckLink + '&types=' + form.types.join(',');
 		}
 		if (form.sites) {
 			directLink = directLink + '&sites=' + form.sites.join(',');
