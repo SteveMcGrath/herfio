@@ -25,15 +25,15 @@ block content
 						fieldset
 							legend Auction Sites
 							label
-								input(type='checkbox', name='sites', value='cbid')
+								input(type='checkbox', name='sites[]', value='cbid')
 								span &nbsp;CigarBid
 							br
 							label
-								input(type='checkbox', name='sites', value='cigarauctioneer')
+								input(type='checkbox', name='sites[]', value='cigarauctioneer')
 								span &nbsp;Cigar Auctioneer
 							br
 							label
-								input(type='checkbox', name='sites', value='cigarmonster') 
+								input(type='checkbox', name='sites[]', value='cigarmonster') 
 								span &nbsp;Cigar Monster
 							br
 				.col-md-6
@@ -41,23 +41,23 @@ block content
 						fieldset
 							legend Auction Types
 							label
-								input(type='checkbox', name='types', value='single')
+								input(type='checkbox', name='types[]', value='single')
 								span &nbsp;Singles
 							br
 							label
-								input(type='checkbox', name='types', value='5-pack')
+								input(type='checkbox', name='types[]', value='5-pack')
 								span &nbsp;5-pack
 							br
 							label
-								input(type='checkbox', name='types', value='10-pack')
+								input(type='checkbox', name='types[]', value='10-pack')
 								span &nbsp;10-pack
 							br
 							label
-								input(type='checkbox', name='types', value='box')
+								input(type='checkbox', name='types[]', value='box')
 								span &nbsp;Box
 							br
 							label
-								input(type='checkbox', name='types', value='sampler')
+								input(type='checkbox', name='types[]', value='sampler')
 								span &nbsp;Sampler
 			#bid-history-help
 				hr
