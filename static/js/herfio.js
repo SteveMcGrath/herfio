@@ -160,10 +160,12 @@ $('#searchButton').click(function() {
 				price = '<strong>' + item.price.toFixed(2) + '</strong>';
 			}
 			$('#auction-history-table > tbody').append(
-				'<tr onclick="window.open(\'' + item.link + '\')">' +
+				'<tr>' +
 				'<td>' + item.name + '</td>' +
-				'<td>' + item.type + '</td>' +
+				'<td><a class="btn btn-sm btn-primary" href="' + item.link + 
+				'">Goto Auction<span aria-hidden="true" class="glyphicon glyphicon-link"></span></a>' +
 				'<td><img src="/static/img/' + item.site + '.png"></td>' +
+				'<td>' + item.type + '</td>' +
 				'<td>' + moment(item.closed).fromNow() + '</td>' +
 				'<td>' + price + '</td>' +
 				'</tr>'
