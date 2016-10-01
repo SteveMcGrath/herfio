@@ -1,9 +1,3 @@
-var clipboard = new Clipboard('.btn');
-
-clipboard.on('success',function(e){
-    $('#get-search-link').tooltip();
-});
-
 function getUrlQuery() {
     var queries = {};
     $.each(document.location.search.substr(1).split('&'),function(c,q){
@@ -63,7 +57,7 @@ $('#searchButton').click(function() {
     // Hide the help info and show the analytics
     $('#bid-history-help').hide()
     $('#bid-history-analytics').show()
-    $('#get-search-link').attr('data-clipboard-text', 
+    $('#bhl-content').text( 
         'https://herf.io/bids?search=' + encodeURIComponent(form.search) + 
         '&types=' + form.types + 
         '&sites=' + form.sites

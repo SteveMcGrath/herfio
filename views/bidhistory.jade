@@ -15,7 +15,7 @@ block content
                     button(onclick='$(\'#bid-history-help\').toggle();return false' data-toggle='tooltip', title='Toggle Help Information').btn.btn-info
                         span(area-hidden='true').glyphicon.glyphicon-question-sign
                 span.input-group-btn
-                    button(onclick='$(\'#bid-history-link\').toggle();return false', data-clipboard-text='', data-toggle='tooltip', title='Click to Generate a savable link.').btn.btn-info
+                    button(data-toggle='modal', data-target='#bid-history-link' onclick='return false').btn.btn-info
                         span(area-hidden='true').glyphicon.glyphicon-copy
             span Open Auctions:
             span#open-auctions 
@@ -173,5 +173,12 @@ block content
                             td Closed
                             td Price
                         tbody
-    div(style='display: none')#bid-history-link.overlay
-        
+    div(tabindex='-1', role='dialog', aria-labelledby='bidHistoryLinkLabel')#bid-history-link.modal.fade
+        div(role='document').modal-dialog
+            .modal-content
+                .modal-header
+                    button(type='button', data-dismiss='modal', aria-hidden='true').close &times;
+                    h4.modal-title Returnable Link
+                .modal-body
+                    p#bhl-content
+

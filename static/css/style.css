@@ -51,3 +51,8 @@ body { padding-top: 60px; }
     color: white;
     display: inline-block;
  }
+
+ .col-centered{
+    float: none;
+    margin: 0 auto;
+}
