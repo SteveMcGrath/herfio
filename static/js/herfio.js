@@ -48,7 +48,16 @@ $('#searchButton').click(function() {
 	// Hide the help info and show the analytics
 	$('#bid-history-help').hide()
 	$('#bid-history-analytics').show()
-	$('#get-search-link').value('https://herf.io/bids?search=' + encodeURIComponent(form.search) + '&types=' + form.types.join(',') + '&sites=' + form.sites.join(','))
+	$('#get-search-link').attr('data-clipboard-text', function() {
+		var directLink = 'https://herf.io/bids?search=' + encodeURIComponent(form.search);
+		if (form.types) {
+			direckLink = direckLink + '&types=' + form.types.join(',');
+		}
+		if (form.sites) {
+			directLink = directLink + '&sites=' + form.sites.join(',');
+		}
+		return directLink;
+	})
 
 	// Clear out all of the current (if any) pricing information
 	$('#avg-price').empty();
