@@ -1,10 +1,4 @@
-function wait(delay, check, callback) {
-	if (!check) {
-		setTimeout(wait, delay, callback);
-	} else {
-		callback();
-	}
-}
+new Clipboard('.btn');
 
 function getUrlQuery() {
 	var queries = {};
