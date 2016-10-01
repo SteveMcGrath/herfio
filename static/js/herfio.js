@@ -108,28 +108,38 @@ $('#searchButton').click(function() {
         // histogram markings.
         $.post('/bids/search/distribution', form, function(distribution) {
             $('#price-distribution').height(200);
-            var histogram = {
-                color: 'rgba(0, 0, 0, 0.5)',
-                data: distribution,
-                bars: {
-                    show: true,
-                    barWidth: .25,
-                    fill: true,
-                    fillColor: 'rgba(0, 0, 0, 0.8)',
-                    zero: true
-                }
-            }
+
+            // We need to break down the distribution into the various statistical buckets
+            // so that we can apply the appropriate colors to them.
+            var great = [], good = [], poor = [], bad = [], outside = [];
+            $.each(distribution, function(i, item) {
+                if (item[0] >= stats.great && item[0] < stats.good){ great.push(item); }
+                else if (item[0] >= stats.good && item[0] < stats.mean){ good.push(item); }
+                else if (item[0] >= stats.mean && item[0] < stats.poor){ poor.push(item); }
+                else if (item[0] >= stats.poor && item[0] < stats.bad){ bad.push(item); }
+                else { outside.push(item); }
+            });
+
+            // Now to populate the data with the information Flot needs to generate the
+            // graph.
+            var histogram = [
+                {color: '#000', data: outside, bars: {show: true, barWidth: .25, fill: .8}},
+                {color: '#357abd', data: great, bars: {show: true, barWidth: .25, fill: .8}},
+                {color: '#4cae4c', data: good, bars: {show: true, barWidth: .25, fill: .8}},
+                {color: '#fdc431', data: poor, bars: {show: true, barWidth: .25, fill: .8}},
+                {color: '#ee9336', data: bad, bars: {show: true, barWidth: .25, fill: .8}},
+            ]
             
-            $.plot($('#price-distribution'), [histogram], {
-                yaxis: {show: false},
+            // and then to generate the graph :D
+            $.plot($('#price-distribution'), histogram, {
+                yaxis: {show: true},
                 xaxis: {tickDecimals: 2},
-                grid: {
-                    markings: [
-                        {xaxis: {from: stats.great, to: stats.good}, color: '#357abd'},
-                        {xaxis: {from: stats.good, to: stats.mean}, color: '#4cae4c'},
-                        {xaxis: {from: stats.mean, to: stats.poor}, color: '#fdc431'},
-                        {xaxis: {from: stats.poor, to: stats.bad}, color: '#ee9336'}
-            ]}});
+                series: {
+                    autoMarkings: {
+                        enabled: false,
+                    }
+                },
+            });
         })
     });
 
@@ -143,9 +153,16 @@ $('#searchButton').click(function() {
         }
         $.plot($('#price-trend'), [trendline], {
             xaxis: { mode: 'time'},
-            series: {lines: {
-                fill: true,
-                fillColor: 'rgba(21, 140, 186, 0.60)',
+            series: {
+                autoMarkings: {
+                    enabled: true,
+                    showAvg: true,
+                    avgcolor: 'rgb(255,0,0)'
+                },
+                lines: {
+                    zero: false,
+                    fill: true,
+                    fillColor: 'rgba(21, 140, 186, 0.60)',
         }}});
     });
 
