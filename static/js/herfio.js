@@ -1,22 +1,7 @@
-var clipboard = new Clipboard('[data-clipboard-demo]');
-
-function showTooltip(elem,msg){
-	elem.setAttribute('class', 'btn tooltipped tooltipped-s');
-	elem.setAttribute('aria-label', msg);
-}
+var clipboard = new Clipboard('.btn');
 
 clipboard.on('success',function(e){
-	e.clearSelection();
-	console.info('Action:',e.action);
-	console.info('Text:',e.text);
-	console.info('Trigger:',e.trigger);
-	showTooltip(e.trigger,'Copied!');
-});
-
-clipboard.on('error',function(e){
-	console.error('Action:',e.action);
-	console.error('Trigger:',e.trigger);
-	showTooltip(e.trigger,fallbackMessage(e.action));
+	$('#get-search-link').tooltip();
 });
 
 function getUrlQuery() {
@@ -39,7 +24,7 @@ $(document).ready(function() {
 	})
 
 	if (query.search) {
-		$('#search').val(decodeURIComponent(query.search));
+		$('#search').val(decodeURIComponent(query.search).replace('+', ' '));
 		$.each($(':checkbox[name="sites"]'), function(i, item) {
 			if(query.sites && query.sites.indexOf(item.value) >= 0) {
 				item.checked;
@@ -56,9 +41,14 @@ $(document).ready(function() {
 
 
 $('#searchButton').click(function() {
-	var form = $('#searchForm').serializeObject();
-	form.types = [];
-	form.sites = [];
+
+	// JQuery's Serialize doesn't seem to want to return the data in a format
+	// that I want, so I'm interpreting the data by hand now.
+	var form = {
+		search: $('#search').val(),
+		types: [],
+		sites: []
+	};
 
 	$('[name="types"]:checked').each(function() {
     	form.types.push($(this).val());
@@ -67,20 +57,17 @@ $('#searchButton').click(function() {
 	$('[name="sites"]:checked').each(function() {
     	form.sites.push($(this).val());
 	});
+	form.sites = form.sites.join(',')
+	form.types = form.types.join(',')
 
 	// Hide the help info and show the analytics
 	$('#bid-history-help').hide()
 	$('#bid-history-analytics').show()
-	$('#get-search-link').attr('data-clipboard-text', function() {
-		var directLink = 'https://herf.io/bids?search=' + encodeURIComponent(form.search);
-		if (form.types) {
-			directLink = directLink + '&types=' + form.types.join(',');
-		}
-		if (form.sites) {
-			directLink = directLink + '&sites=' + form.sites.join(',');
-		}
-		return directLink;
-	})
+	$('#get-search-link').attr('data-clipboard-text', 
+		'https://herf.io/bids?search=' + encodeURIComponent(form.search) + 
+		'&types=' + form.types + 
+		'&sites=' + form.sites
+	);
 
 	// Clear out all of the current (if any) pricing information
 	$('#avg-price').empty();
@@ -104,12 +91,11 @@ $('#searchButton').click(function() {
 	$.post('/bids/search/totals', form, function(totals) {
 		$('#open-auctions').text(' ' + totals.open);
 		$('#closed-auctions').text(' ' + totals.closed);
-	}, 'json');
+	});
 
 
 	// Get the statistical data and populate the stats tiles
 	$.post('/bids/search/stats', form, function(stats) {
-		console.log(stats)
 		$('#avg-price').text(stats.mean.toFixed(2));
 		$('#best-price').text(stats.best.toFixed(2));
 		$('#worst-price').text(stats.worst.toFixed(2));
@@ -147,8 +133,8 @@ $('#searchButton').click(function() {
 						{xaxis: {from: stats.mean, to: stats.poor}, color: '#fdc431'},
 						{xaxis: {from: stats.poor, to: stats.bad}, color: '#ee9336'}
 			]}});
-		}, 'json')
-	}, 'json');
+		})
+	});
 
 
 	// Get the price timeline and render the graph
@@ -164,7 +150,7 @@ $('#searchButton').click(function() {
                 fill: true,
                 fillColor: 'rgba(21, 140, 186, 0.60)',
         }}});
-	}, 'json');
+	});
 
 
 	// Populate the open auctions
@@ -180,7 +166,7 @@ $('#searchButton').click(function() {
 				'</tr>'
 			);
 		});
-	}, 'json');
+	});
 
 
 	// Populate the open auctions
@@ -205,6 +191,6 @@ $('#searchButton').click(function() {
 				'</tr>'
 			);
 		});
-	}, 'json');
+	});
 	return false;
 })
