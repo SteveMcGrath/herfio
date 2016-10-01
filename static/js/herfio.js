@@ -138,11 +138,10 @@ $('#searchButton').click(function() {
 		$.each(rows, function(k, item) {
 			$('#open-auctions-table > tbody').append(
 				'<tr>' +
+				'<td><a href="' + item.link + '"><span aria-hidden="true" class="glyphicon glyphicon-link"></span></a>' +
 				'<td>' + item.name + '</td>' +
-				'<td><a class="btn btn-sm btn-primary" href="' + item.link + 
-				'">Goto Auction<span aria-hidden="true" class="glyphicon glyphicon-link"></span></a>' +
 				'<td><img src="/static/img/' + item.site + '.png"></td>' +
-				'<td>' + item.type + '</td>' +
+				'<td>' + item.type + '/<strong>' + item.quantity + '</strong></td>' +
 				'<td>' + moment(item.closed).fromNow() + '</td>' +
 				'</tr>'
 			);
@@ -163,11 +162,10 @@ $('#searchButton').click(function() {
 			}
 			$('#auction-history-table > tbody').append(
 				'<tr>' +
+				'<td><a href="' + item.link + '"><span aria-hidden="true" class="glyphicon glyphicon-link"></span></a>' +
 				'<td>' + item.name + '</td>' +
-				'<td><a class="btn btn-sm btn-primary" href="' + item.link + 
-				'">Goto Auction<span aria-hidden="true" class="glyphicon glyphicon-link"></span></a>' +
 				'<td><img src="/static/img/' + item.site + '.png"></td>' +
-				'<td>' + item.type + '</td>' +
+				'<td>' + item.type + '/<strong>' + item.quantity + '</strong></td>' +
 				'<td>' + moment(item.closed).fromNow() + '</td>' +
 				'<td>' + price + '</td>' +
 				'</tr>'
