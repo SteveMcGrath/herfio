@@ -1,5 +1,10 @@
 var clipboard = new Clipboard('[data-clipboard-demo]');
 
+function showTooltip(elem,msg){
+	elem.setAttribute('class', 'btn tooltipped tooltipped-s');
+	elem.setAttribute('aria-label', msg);
+}
+
 clipboard.on('success',function(e){
 	e.clearSelection();
 	console.info('Action:',e.action);
