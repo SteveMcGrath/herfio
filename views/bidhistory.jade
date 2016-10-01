@@ -1,175 +1,177 @@
 extends layout.jade
 
 block content
-	.well
-		form#searchForm
-			.input-group
-				input(id='search', name='search', type='text', placeholder='Search').form-control
-				span.input-group-btn
-					button#searchButton.btn.btn-success
-						span(aria-hidden='true').glyphicon.glyphicon-search
-				span.input-group-btn
-					button(onclick='$(\'#advanced-search\').toggle();return false').btn.btn-info
-						span(area-hidden='true').glyphicon.glyphicon-list
-				span.input-group-btn
-					button(onclick='$(\'#bid-history-help\').toggle();return false').btn.btn-info
-						span(area-hidden='true').glyphicon.glyphicon-question-sign
-				span.input-group-btn
-					button(id='get-search-link', class='btn btn-info', data-clipboard-text='', data-toggle='tooltip', title='Copied!')
-						span(area-hidden='true').glyphicon.glyphicon-copy
-			span Open Auctions:
-			span#open-auctions 
-			span &nbsp;&nbsp;Archived Auctions:
-			span#closed-auctions
-			#advanced-search.row
-				hr
-				.col-md-6
-					.input-group
-						fieldset
-							legend Auction Sites
-							label
-								input(type='checkbox', name='sites', value='cbid')
-								span &nbsp;CigarBid
-							br
-							label
-								input(type='checkbox', name='sites', value='cigarauctioneer')
-								span &nbsp;Cigar Auctioneer
-							br
-							label
-								input(type='checkbox', name='sites', value='cigarmonster') 
-								span &nbsp;Cigar Monster
-							br
-				.col-md-6
-					.input-group
-						fieldset
-							legend Auction Types
-							label
-								input(type='checkbox', name='types', value='single')
-								span &nbsp;Singles
-							br
-							label
-								input(type='checkbox', name='types', value='5-pack')
-								span &nbsp;5-pack
-							br
-							label
-								input(type='checkbox', name='types', value='10-pack')
-								span &nbsp;10-pack
-							br
-							label
-								input(type='checkbox', name='types', value='box')
-								span &nbsp;Box
-							br
-							label
-								input(type='checkbox', name='types', value='sampler')
-								span &nbsp;Sampler
-			#bid-history-help
-				hr
-				:markdown
-					## What is BidHistory
+    .well
+        form#searchForm
+            .input-group
+                input(id='search', name='search', type='text', placeholder='Search').form-control
+                span.input-group-btn
+                    button(data-toggle='tooltip', title='Search!')#searchButton.btn.btn-success
+                        span(aria-hidden='true').glyphicon.glyphicon-search
+                span.input-group-btn
+                    button(onclick='$(\'#advanced-search\').toggle();return false' data-toggle='tooltip', title='Toggle Advanced Search').btn.btn-info
+                        span(area-hidden='true').glyphicon.glyphicon-list
+                span.input-group-btn
+                    button(onclick='$(\'#bid-history-help\').toggle();return false' data-toggle='tooltip', title='Toggle Help Information').btn.btn-info
+                        span(area-hidden='true').glyphicon.glyphicon-question-sign
+                span.input-group-btn
+                    button(onclick='$(\'#bid-history-link\').toggle();return false', data-clipboard-text='', data-toggle='tooltip', title='Click to Generate a savable link.').btn.btn-info
+                        span(area-hidden='true').glyphicon.glyphicon-copy
+            span Open Auctions:
+            span#open-auctions 
+            span &nbsp;&nbsp;Archived Auctions:
+            span#closed-auctions
+            #advanced-search.row
+                hr
+                .col-md-6
+                    .input-group
+                        fieldset
+                            legend Auction Sites
+                            label
+                                input(type='checkbox', name='sites', value='cbid')
+                                span &nbsp;CigarBid
+                            br
+                            label
+                                input(type='checkbox', name='sites', value='cigarauctioneer')
+                                span &nbsp;Cigar Auctioneer
+                            br
+                            label
+                                input(type='checkbox', name='sites', value='cigarmonster') 
+                                span &nbsp;Cigar Monster
+                            br
+                .col-md-6
+                    .input-group
+                        fieldset
+                            legend Auction Types
+                            label
+                                input(type='checkbox', name='types', value='single')
+                                span &nbsp;Singles
+                            br
+                            label
+                                input(type='checkbox', name='types', value='5-pack')
+                                span &nbsp;5-pack
+                            br
+                            label
+                                input(type='checkbox', name='types', value='10-pack')
+                                span &nbsp;10-pack
+                            br
+                            label
+                                input(type='checkbox', name='types', value='box')
+                                span &nbsp;Box
+                            br
+                            label
+                                input(type='checkbox', name='types', value='sampler')
+                                span &nbsp;Sampler
+            #bid-history-help
+                hr
+                :markdown
+                    ## What is BidHistory
 
-					BidHistory is a tool designed to provide some statistics and temporal information 
-					about Cigar auctions across various auction sites.  As BidHistory is early in it's 
-					development, it is not feature complete and may change over time.  We welcome any 
-					input from our users and feel free to file bug reports or feature requests on the 
-					[GitHub Page](http://github/.com/stevemcgrath/bidhistory).
+                    BidHistory is a tool designed to provide some statistics and temporal information 
+                    about Cigar auctions across various auction sites.  As BidHistory is early in it's 
+                    development, it is not feature complete and may change over time.  We welcome any 
+                    input from our users and feel free to file bug reports or feature requests on the 
+                    [GitHub Page](http://github/.com/stevemcgrath/bidhistory).
 
-					## How to use the auction search
+                    ## How to use the auction search
 
-					Searching the BidHistory toolset is pretty easy, as its just a matter of typing in
-					the words that you would like to search against and clicking the 
-					<span class="glyphicon glyphicon-search"></span> button.  If you'd like to exclude 
-					a word from the search, just prepend the word with a dash (-) symbol to inform 
-					BidHistory that you would like to negate this word from the results.
+                    Searching the BidHistory toolset is pretty easy, as its just a matter of typing in
+                    the words that you would like to search against and clicking the 
+                    <span class="glyphicon glyphicon-search"></span> button.  If you'd like to exclude 
+                    a word from the search, just prepend the word with a dash (-) symbol to inform 
+                    BidHistory that you would like to negate this word from the results.
 
-					If you'd like a little more granularity, then click the <span class="glyphicon glyphicon-list"></span>
-					button to expand the advanced search apabilities.  From here you can select what
-					auction sites you would like us to search from and what types of auctions we should
-					be searching for.  Multiple selections are possible as well.
+                    If you'd like a little more granularity, then click the <span class="glyphicon glyphicon-list"></span>
+                    button to expand the advanced search apabilities.  From here you can select what
+                    auction sites you would like us to search from and what types of auctions we should
+                    be searching for.  Multiple selections are possible as well.
 
-					The <span class="glyphicon glyphicon-question-sign"></span> button will always toggle
-					this help message.
-	div(style='display: none')#bid-history-analytics
-		#price-tiles.row
-			.container.col-lg-4
-				.panel.tile.avg
-					.panel-heading
-						h3.panel-title Average Price
-					.panel-body
-						#avg-price.price.big-price
-			.container.col-lg-4
-				.panel.tile.best
-					.panel-heading
-						h3.panel-title Best Price
-					.panel-body
-						#best-price.price.big-price
-			.container.col-lg-4
-				.panel.tile.worst
-					.panel-heading
-						h3.panel-title Worst Price
-					.panel-body
-						#worst-price.price.big-price
-		#price-adv.row
+                    The <span class="glyphicon glyphicon-question-sign"></span> button will always toggle
+                    this help message.
+    div(style='display: none')#bid-history-analytics
+        #price-tiles.row
+            .container.col-lg-4
+                .panel.tile.avg
+                    .panel-heading
+                        h3.panel-title Average Price
+                    .panel-body
+                        #avg-price.price.big-price
+            .container.col-lg-4
+                .panel.tile.best
+                    .panel-heading
+                        h3.panel-title Best Price
+                    .panel-body
+                        #best-price.price.big-price
+            .container.col-lg-4
+                .panel.tile.worst
+                    .panel-heading
+                        h3.panel-title Worst Price
+                    .panel-body
+                        #worst-price.price.big-price
+        #price-adv.row
 
-		#price-ranges.row
-			.container.col-lg-3
-				.panel.great.tile
-					.panel-heading
-						h3.panel-title Great Price Range
-					.panel-body
-						#great-price-range.price
-			.container.col-lg-3
-				.panel.good.tile
-					.panel-heading
-						h3.panel-title Good Price Range
-					.panel-body
-						#good-price-range.price
-			.container.col-lg-3
-				.panel.poor.tile
-					.panel-heading
-						h3.panel-title Poor Price Range
-					.panel-body
-						#poor-price-range.price
-			.container.col-lg-3
-				.panel.bad.tile
-					.panel-heading
-						h3.panel-title Bad Price Range
-					.panel-body
-						#bad-price-range.price
-		#trends
-			.panel.panel-primary
-				.panel-heading
-					h3.panel-title Price Distribution
-				.panel-body
-					#price-distribution
-			.panel.panel-primary
-				.panel-heading
-					h3.panel-title Price History
-				.panel-body
-					#price-trend
-		#current-auctions
-			.panel.panel-primary
-				.panel-heading
-					h3.panel-title Current Auctions
-				#open-auctions-view.panel-body
-					table#open-auctions-table.table.table-striped.table-hover
-						thead
-							td
-							td Title
-							td
-							td Type
-							td Closes
-						tbody
-		#auction-history
-			.panel.panel-primary
-				.panel-heading
-					h3.panel-title Auction History
-				#auction-history-view.panel-body
-					table#auction-history-table.table.table-striped.table-hover
-						thead
-							td
-							td Title
-							td
-							td Type
-							td Closed
-							td Price
-						tbody
+        #price-ranges.row
+            .container.col-lg-3
+                .panel.great.tile
+                    .panel-heading
+                        h3.panel-title Great Price Range
+                    .panel-body
+                        #great-price-range.price
+            .container.col-lg-3
+                .panel.good.tile
+                    .panel-heading
+                        h3.panel-title Good Price Range
+                    .panel-body
+                        #good-price-range.price
+            .container.col-lg-3
+                .panel.poor.tile
+                    .panel-heading
+                        h3.panel-title Poor Price Range
+                    .panel-body
+                        #poor-price-range.price
+            .container.col-lg-3
+                .panel.bad.tile
+                    .panel-heading
+                        h3.panel-title Bad Price Range
+                    .panel-body
+                        #bad-price-range.price
+        #trends
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title Price Distribution
+                .panel-body
+                    #price-distribution
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title Price History
+                .panel-body
+                    #price-trend
+        #current-auctions
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title Current Auctions
+                #open-auctions-view.panel-body
+                    table#open-auctions-table.table.table-striped.table-hover
+                        thead
+                            td
+                            td Title
+                            td
+                            td Type
+                            td Closes
+                        tbody
+        #auction-history
+            .panel.panel-primary
+                .panel-heading
+                    h3.panel-title Auction History
+                #auction-history-view.panel-body
+                    table#auction-history-table.table.table-striped.table-hover
+                        thead
+                            td
+                            td Title
+                            td
+                            td Type
+                            td Closed
+                            td Price
+                        tbody
+    div(style='display: none')#bid-history-link.overlay
+        

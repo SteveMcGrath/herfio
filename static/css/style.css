@@ -16,26 +16,38 @@
 .bad {background-color: #ee9336;}
 
 .temp-hum-control {
-	width: 40px;
+    width: 40px;
 }
 
 .tile>.panel-heading {
     color: #ffffff;
     border-color: transparent;
-	text-align: center;
-	margin-top: 5px;	
+    text-align: center;
+    margin-top: 5px;    
 }
 
 .tile>.panel-body {
-	color: #ffffff;
+    color: #ffffff;
 }
 
 .price {
-	text-align: center;
-	font-size: xx-large;
-	position: relative;
+    text-align: center;
+    font-size: xx-large;
+    position: relative;
 }
 
 .big-price {font-size: 60px;}
 
 body { padding-top: 60px; }
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    color: white;
+    display: inline-block;
+ }

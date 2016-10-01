@@ -1,76 +1,76 @@
 extends layout.jade
 
 block content
-	if !humidor
-		- humidor= {_id: 'NONE', name: 'New Humidor', location: 'Somewhere', email: 'email@domain.tld', limits: {temperature: {high: 75, low: 60}, humidity: {high: 75, low: 64}}}
-	.well
-		form(method='post').form-horizontal
-			fieldset
-				h3 General Information
-				ul.list-group
-					li.list-group-item
-						.form-group
-							label(for='id').control-label.col-lg-2 Humidor Identifier
-							.col-lg-10
-								input(id='id', type='text', disabled='', value=humidor._id).form-control
-					li.list-group-item
-						.form-group
-							label(for='name').control-label.col-lg-2 Name
-							.col-lg-10
-								input(id='name', name='name', type='text', value=humidor.name).form-control
-					li.list-group-item
-						.form-group
-								label(for='location').control-label.col-lg-2 Location
-								.col-lg-10
-									input(id='location', name='location', type='text', value=humidor.location).form-control
-					li.list-group-item
-						.form-group
-							label(for='email').control-label.col-lg-2 Contact Email
-							.col-lg-10
-								input(id='email', name='email', type='email', value=humidor.email).form-control
-				.row
-					.col-md-6.col-sm-6
-						h3 Tempurature Alert Thresholds
-						ul.list-group
-							li.list-group-item
-								.form-group
-									label(for='temp_high').control-label.col-lg-2 High
-									.col-lg-10
-										input(id='temp_high', name='temp_high', type='text', maxlength=2, size=2, value=humidor.limits.temperature.high).form-control.temp-hum-control
-							li.list-group-item
-								.form-group
-									label(for='temp_low').control-label.col-lg-2 Low
-									.col-lg-10
-										input(id='temp_low', name='temp_low', type='text', maxlength=2, size=2, value=humidor.limits.temperature.low).form-control.temp-hum-control
-					.col-md-6.col-sm-6
-						h3 Humidity Alert Thresholds
-						ul.list-group
-							li.list-group-item
-								.form-group
-									label(for='hum_high').control-label.col-lg-2 High
-									.col-lg-10
-										input(id='hum_high', name='hum_high', type='text', maxlength=2, size=2, value=humidor.limits.humidity.high).form-control.temp-hum-control
-							li.list-group-item
-								.form-group
-									label(for='hum_low').control-label.col-lg-2 Low
-									.col-lg-10
-										input(id='hum_low', name='hum_low', type='text', maxlength=2, size=2, value=humidor.limits.humidity.low).form-control.temp-hum-control
-				.form-group
-					button(type='submit', name='update', value='update').btn.btn-primary Submit
-					if humidor._id != 'NONE'
-						button(type='submit', name='delete', value='delete').btn.btn-danger.pull-right Delete this humidor
-				if humidor._id != 'NONE'
-					h3 Sensor Readings
-					ul.list-group
-					each reading, index in humidor.readings
-						li.list-group-item
-							.row
-								.lg-col-4
-									strong Timestamp
-									span= reading.timestamp
-								.lg-col-4
-									strong Tempurature
-									span= reading.temperature
-								.lg-col-4
-									strong Humidity
-									span= reading.humidity
+    if !humidor
+        - humidor= {_id: 'NONE', name: 'New Humidor', location: 'Somewhere', email: 'email@domain.tld', limits: {temperature: {high: 75, low: 60}, humidity: {high: 75, low: 64}}}
+    .well
+        form(method='post').form-horizontal
+            fieldset
+                h3 General Information
+                ul.list-group
+                    li.list-group-item
+                        .form-group
+                            label(for='id').control-label.col-lg-2 Humidor Identifier
+                            .col-lg-10
+                                input(id='id', type='text', disabled='', value=humidor._id).form-control
+                    li.list-group-item
+                        .form-group
+                            label(for='name').control-label.col-lg-2 Name
+                            .col-lg-10
+                                input(id='name', name='name', type='text', value=humidor.name).form-control
+                    li.list-group-item
+                        .form-group
+                                label(for='location').control-label.col-lg-2 Location
+                                .col-lg-10
+                                    input(id='location', name='location', type='text', value=humidor.location).form-control
+                    li.list-group-item
+                        .form-group
+                            label(for='email').control-label.col-lg-2 Contact Email
+                            .col-lg-10
+                                input(id='email', name='email', type='email', value=humidor.email).form-control
+                .row
+                    .col-md-6.col-sm-6
+                        h3 Tempurature Alert Thresholds
+                        ul.list-group
+                            li.list-group-item
+                                .form-group
+                                    label(for='temp_high').control-label.col-lg-2 High
+                                    .col-lg-10
+                                        input(id='temp_high', name='temp_high', type='text', maxlength=2, size=2, value=humidor.limits.temperature.high).form-control.temp-hum-control
+                            li.list-group-item
+                                .form-group
+                                    label(for='temp_low').control-label.col-lg-2 Low
+                                    .col-lg-10
+                                        input(id='temp_low', name='temp_low', type='text', maxlength=2, size=2, value=humidor.limits.temperature.low).form-control.temp-hum-control
+                    .col-md-6.col-sm-6
+                        h3 Humidity Alert Thresholds
+                        ul.list-group
+                            li.list-group-item
+                                .form-group
+                                    label(for='hum_high').control-label.col-lg-2 High
+                                    .col-lg-10
+                                        input(id='hum_high', name='hum_high', type='text', maxlength=2, size=2, value=humidor.limits.humidity.high).form-control.temp-hum-control
+                            li.list-group-item
+                                .form-group
+                                    label(for='hum_low').control-label.col-lg-2 Low
+                                    .col-lg-10
+                                        input(id='hum_low', name='hum_low', type='text', maxlength=2, size=2, value=humidor.limits.humidity.low).form-control.temp-hum-control
+                .form-group
+                    button(type='submit', name='update', value='update').btn.btn-primary Submit
+                    if humidor._id != 'NONE'
+                        button(type='submit', name='delete', value='delete').btn.btn-danger.pull-right Delete this humidor
+                if humidor._id != 'NONE'
+                    h3 Sensor Readings
+                    ul.list-group
+                    each reading, index in humidor.readings
+                        li.list-group-item
+                            .row
+                                .lg-col-4
+                                    strong Timestamp
+                                    span= reading.timestamp
+                                .lg-col-4
+                                    strong Tempurature
+                                    span= reading.temperature
+                                .lg-col-4
+                                    strong Humidity
+                                    span= reading.humidity
