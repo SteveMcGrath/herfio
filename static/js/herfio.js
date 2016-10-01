@@ -6,12 +6,39 @@ function wait(delay, check, callback) {
 	}
 }
 
+function getUrlQuery() {
+	var queries = {};
+	$.each(document.location.search.substr(1).split('&'),function(c,q){
+		var i = q.split('=');
+		if (i[0].length > 0) {
+			queries[i[0].toString()] = i[1].toString();
+		}
+	});
+	return queries;
+}
+
 $(document).ready(function() {
+	var query = getUrlQuery();
 	$('#bid-history-analytics').hide()
 	$.get('/bids/totals', function(totals) {
 		$('#open-auctions').text(' ' + totals.open);
 		$('#closed-auctions').text(' ' + totals.closed);
 	})
+
+	if (query.search) {
+		$('#search').val(decodeURIComponent(query.search));
+		$.each($(':checkbox[name="sites"]'), function(i, item) {
+			if(query.sites && query.sites.indexOf(item.value) >= 0) {
+				item.checked;
+			}
+		})
+		$.each($(':checkbox[name="types"]'), function(i, item) {
+			if(query.types && query.types.indexOf(item.value) >= 0) {
+				item.checked;
+			}
+		})	
+		$('#searchButton').click();
+	}
 })
 
 
@@ -126,7 +153,7 @@ $('#searchButton').click(function() {
 		$.each(rows, function(k, item) {
 			var price = null;
 			if (item.type != 'single' && item.price > 0) {
-				price = '<strong>' + item.pricePerStick.toFixed(2) + '</strong>/<small>' + item.price.toFixed(2) + '</small>';
+				price = '<strong>' + (item.price / item.quantity).toFixed(2) + '</strong>/<small>' + item.price.toFixed(2) + '</small>';
 			} else if (!item.price || item.price == 0) {
 				price = '<small>No Sale</small>';
 			} else {
