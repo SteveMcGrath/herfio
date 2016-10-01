@@ -107,13 +107,16 @@ $('#searchButton').click(function() {
         // to the statistical data as we need to use the stats information to generate the
         // histogram markings.
         $.post('/bids/search/distribution', form, function(distribution) {
-            $('#price-distribution').height(100);
+            $('#price-distribution').height(200);
             var histogram = {
-                color: 'rgba(21, 116, 157, 1)',
+                color: 'rgba(0, 0, 0, 0.5)',
                 data: distribution,
                 bars: {
                     show: true,
-                    barWidth: .25
+                    barWidth: .25,
+                    fill: true,
+                    fillColor: 'rgba(0, 0, 0, 0.8)',
+                    zero: true
                 }
             }
             
@@ -133,9 +136,9 @@ $('#searchButton').click(function() {
 
     // Get the price timeline and render the graph
     $.post('/bids/search/timeline', form, function(timeline) {
-        $('#price-trend').height(100);
+        $('#price-trend').height(200);
         var trendline = {
-            color: 'rgba(21, 116, 157, 1)',
+            color: 'rgb(21, 116, 157)',
             data: timeline,
         }
         $.plot($('#price-trend'), [trendline], {
