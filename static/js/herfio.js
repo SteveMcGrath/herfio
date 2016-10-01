@@ -57,6 +57,16 @@ $(document).ready(function() {
 
 $('#searchButton').click(function() {
 	var form = $('#searchForm').serializeObject();
+	form.types = [];
+	form.sites = [];
+
+	$('[name="types"]:checked').each(function() {
+    	form.types.push($(this).val());
+	});
+
+	$('[name="sites"]:checked').each(function() {
+    	form.sites.push($(this).val());
+	});
 
 	// Hide the help info and show the analytics
 	$('#bid-history-help').hide()
@@ -99,6 +109,7 @@ $('#searchButton').click(function() {
 
 	// Get the statistical data and populate the stats tiles
 	$.post('/bids/search/stats', form, function(stats) {
+		console.log(stats)
 		$('#avg-price').text(stats.mean.toFixed(2));
 		$('#best-price').text(stats.best.toFixed(2));
 		$('#worst-price').text(stats.worst.toFixed(2));
