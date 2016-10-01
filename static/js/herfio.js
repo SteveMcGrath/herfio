@@ -48,6 +48,7 @@ $('#searchButton').click(function() {
 	// Hide the help info and show the analytics
 	$('#bid-history-help').hide()
 	$('#bid-history-analytics').show()
+	$('#get-search-link').value('https://herf.io/bids?search=' + encodeURIComponent(form.search) + '&types=' + form.types.join(',') + '&sites=' + form.sites.join(','))
 
 	// Clear out all of the current (if any) pricing information
 	$('#avg-price').empty();

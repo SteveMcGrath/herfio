@@ -14,6 +14,10 @@ block content
 				span.input-group-btn
 					button(onclick='$(\'#bid-history-help\').toggle();return false').btn.btn-info
 						span(area-hidden='true').glyphicon.glyphicon-question-sign
+				span.input-group-btn
+					input(id='get-search-link', type='hidden', name='link', value='')
+					button(data-clipboard-target='#get-search-link')
+						span(area-hidden='true').glyphicon.glyphicon-copy
 			span Open Auctions:
 			span#open-auctions 
 			span &nbsp;&nbsp;Archived Auctions:
