@@ -9,18 +9,19 @@ block content
                     button(data-toggle='tooltip', title='Search!')#searchButton.btn.btn-success
                         span(aria-hidden='true').glyphicon.glyphicon-search
                 span.input-group-btn
-                    button(onclick='$(\'#advanced-search\').toggle();return false' data-toggle='tooltip', title='Toggle Advanced Search').btn.btn-info
-                        span(area-hidden='true').glyphicon.glyphicon-list
-                span.input-group-btn
-                    button(onclick='$(\'#bid-history-help\').toggle();return false' data-toggle='tooltip', title='Toggle Help Information').btn.btn-info
-                        span(area-hidden='true').glyphicon.glyphicon-question-sign
-                span.input-group-btn
-                    button(data-toggle='modal', data-target='#bid-history-link' onclick='return false').btn.btn-info
-                        span(area-hidden='true').glyphicon.glyphicon-copy
-            span Open Auctions:
-            span#open-auctions 
-            span &nbsp;&nbsp;Archived Auctions:
-            span#closed-auctions
+                    div.btn-group
+                        button(data-toggle='dropdown', aria-expanded='false', title='Options').btn.btn-default.dropdown-toggle
+                            span(aria-hidden='true').glyphicon.glyphicon-wrench
+                            span.caret
+                        ul.dropdown-menu
+                            li
+                                a(href='#', onclick='$(\'#advanced-search\').toggle();return false') Advanced Search
+                            li
+                                a(href='#', onclick='$(\'#bid-history-help\').toggle();return false') Help Screen
+                            li
+                                a(href='#', data-toggle='modal', data-target='#bid-history-link' onclick='return false') Get Link
+            span#open-auctions.label.label-primary
+            span#closed-auctions.label.label-success
             #advanced-search.row
                 hr
                 .col-md-6

@@ -9,12 +9,16 @@ function getUrlQuery() {
     return queries;
 }
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 $(document).ready(function() {
     var query = getUrlQuery();
     $('#bid-history-analytics').hide()
     $.get('/bids/totals', function(totals) {
-        $('#open-auctions').text(' ' + totals.open);
-        $('#closed-auctions').text(' ' + totals.closed);
+        $('#open-auctions').text(numberWithCommas(totals.open) + ' open');
+        $('#closed-auctions').text(numberWithCommas(totals.closed) + ' closed');
     })
 
     if (query.search) {
