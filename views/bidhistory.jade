@@ -20,8 +20,10 @@ block content
                                 a(href='#', onclick='$(\'#bid-history-help\').toggle();return false') Help Screen
                             li
                                 a(href='#', data-toggle='modal', data-target='#bid-history-link' onclick='return false') Get Link
-            span#open-auctions.label.label-primary
-            span#closed-auctions.label.label-success
+            a(href='#current-auctions')
+                span#open-auctions.label.label-primary
+            a(href='#auction-history')
+                span#closed-auctions.label.label-success
             #advanced-search.row
                 hr
                 .col-md-6

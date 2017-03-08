@@ -87,8 +87,8 @@ $('#searchButton').click(function() {
 
     // Update the Totals to match the search
     $.post('/bids/search/totals', form, function(totals) {
-        $('#open-auctions').text(' ' + totals.open);
-        $('#closed-auctions').text(' ' + totals.closed);
+        $('#open-auctions').text(numberWithCommas(totals.open) + ' open');
+        $('#closed-auctions').text(numberWithCommas(totals.closed) + ' closed');
     });
 
 
